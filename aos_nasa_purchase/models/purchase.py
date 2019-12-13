@@ -112,6 +112,7 @@ class PurchaseOrderLine(models.Model):
         return message_dict
                     
     #@api.depends('virtual_available')
+    @api.onchange('product_id')
     def _compute_range_message(self):
         for pline in self:
             message_dict = pline._get_message_dict()
@@ -134,7 +135,7 @@ class PurchaseOrderLine(models.Model):
                 res = move.product_id.sudo().with_context(location=location_id)._compute_quantities_dict(self._context.get('lot_id'), self._context.get('owner_id'), self._context.get('package_id'), self._context.get('from_date'), self._context.get('to_date'))
                 if res[move.product_id.id].get('virtual_available'):
                     move.virtual_available = res[move.product_id.id]['virtual_available']
-                    print ('==_compute_quantities=',location_id,move.virtual_available)
+                    #print ('==_compute_quantities=',location_id,move.virtual_available)
     
     warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse',
         required=True, related='order_id.warehouse_id')
@@ -154,7 +155,7 @@ class PurchaseOrderLine(models.Model):
              "Otherwise, this includes goods stored in any Stock Location "
              "with 'internal' type.")
     range_qty = fields.Char(
-        'Range Stock', #compute='_compute_range_message', store=False,
+        'Range Stock',# compute='_compute_range_message', store=False,
         help="Current quantity of products.\n"
              "In a context with a single Stock Location, this includes "
              "goods stored at this Location, or any of its children.\n"
@@ -255,7 +256,7 @@ class PurchaseOrderLine(models.Model):
         self.name = product_lang.display_name
         if product_lang.description_purchase:
             self.name = product_lang.description_purchase
-        self.range_qty = self._compute_range_message()
+        self._compute_range_message()
         self._compute_tax_id()
 
         self._suggest_quantity()
