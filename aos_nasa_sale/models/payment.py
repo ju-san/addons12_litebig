@@ -222,7 +222,7 @@ class AccountPayment(models.Model):
             account_id = self.payment_type in ('outbound','transfer') and self.payment_type in ('outbound','transfer') and self._context.get('journal3').default_debit_account_id.id or self._context.get('journal3').default_credit_account_id.id
         else:
             account_id = self.payment_type in ('outbound','transfer') and self.journal_id.default_debit_account_id.id or self.journal_id.default_credit_account_id.id
-        #print ('===x===',self.payment_type,account_id,self._context.get('journal1'),self._context.get('journal2'),self._context.get('journal3'))
+        print ('===x===',account_id)
         vals = {
             'name': name,
             'account_id': account_id,
