@@ -62,7 +62,7 @@
 	        <field name="model">res.users</field>
 	        <field name="inherit_id" ref="base.view_users_form"/>
 	        <field name="arch" type="xml">
-	            <xpath expr="//field[@name='groups_id']" position="before">
+	            <xpath expr="//page[@name='access_rights']" position="inside">
 	            	<field name="category_id" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" placeholder="Tags..."/>
 	            </xpath>
 	            <xpath expr="//field[@name='company_ids']" position="attributes">
