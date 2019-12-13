@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+		
+		<record id="view_users_category_form" model="ir.ui.view">
+            <field name="name">Users Tags</field>
+            <field name="model">res.users.category</field>
+            <field name="arch" type="xml">
+                <form string="Users Tag">
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="code"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record id="view_users_category_list" model="ir.ui.view">
+            <field name="name">Users Tags</field>
+            <field name="model">res.users.category</field>
+            <field eval="6" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Users Tags">
+                    <field name="display_name"/>
+                    <field name="code"/>
+                </tree>
+            </field>
+        </record>
+        <record id="action_users_category_form" model="ir.actions.act_window">
+            <field name="name">Users Tags</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.users.category</field>
+            <field name="view_type">form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a new users tag.
+                </p>
+                <p>
+                    Manage partner tags to better classify them for tracking and analysis purposes.
+                    A partner may have several categories and categories have a hierarchical structure: a partner with a category has also the parent category.
+                </p>
+            </field>
+        </record>
+        
+	    <menuitem id="menu_users_category_form"
+	        action="action_users_category_form"
+	        name="Users Tags"
+	        sequence="2" parent="contacts.res_partner_menu_config"/>
+		
+		<record id="view_users_tags_tree" model="ir.ui.view">
+	        <field name="name">res.users.category.form</field>
+	        <field name="model">res.users</field>
+	        <field name="inherit_id" ref="base.view_users_tree"/>
+	        <field name="arch" type="xml">
+	            <xpath expr="//field[@name='login']" position="after">
+	            	<field name="category_id" widget="many2many_tags"/>
+	            </xpath>
+	        </field>
+	    </record>
+	    
+	        
+		<record id="view_users_tags_form" model="ir.ui.view">
+	        <field name="name">res.users.category.form</field>
+	        <field name="model">res.users</field>
+	        <field name="inherit_id" ref="base.view_users_form"/>
+	        <field name="arch" type="xml">
+	            <xpath expr="//field[@name='partner_id']" position="after">
+	            	<field name="category_id" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" placeholder="Tags..."/>
+	            </xpath>
+	            <xpath expr="//field[@name='company_ids']" position="attributes">
+	            	<attribute name="options">{'color_field': 'color', 'no_create_edit': True}</attribute>
+	            </xpath>
+	            <xpath expr="//sheet" position="after">
+		            <div class="oe_chatter">
+	                    <field name="message_follower_ids" widget="mail_followers"/>
+	                    <field name="message_ids" widget="mail_thread"/>
+	                </div>
+	            </xpath>
+	        </field>
+	    </record>
+	    
+	    <record id="view_res_users_tags_kanban" model="ir.ui.view">
+	        <field name="name">res.users.category.form</field>
+	        <field name="model">res.users</field>
+	        <field name="inherit_id" ref="base.view_res_users_kanban"/>
+	        <field name="arch" type="xml">
+	            <field name="login_date" position="after">
+	            	<field name="color"/>
+	            	<field name="category_id"/>
+	            	<field name="company_ids"/>
+	            </field>
+	            <xpath expr="//div[@class='oe_kanban_details']" position="inside">
+	            	<div class="o_kanban_tags_section oe_kanban_users_categories">
+		            	<span class="oe_kanban_list_many2many">
+	                        <field name="category_id" widget="many2many_tags" options="{'color_field': 'color'}"/>
+	                    </span>
+	                    <span class="oe_kanban_list_many2many">
+	                        <field name="company_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+	                    </span>
+                    </div>
+	            </xpath>
+	        </field>
+	    </record>
+
+
+</odoo>
