@@ -168,17 +168,17 @@ class PurchaseOrderLine(models.Model):
 
         # it is possible that a no_variant attribute is still in a variant if
         # the type of the attribute has been changed after creation.
-        no_variant_attributes_price_extra = [
-            ptav.price_extra for ptav in self.product_no_variant_attribute_value_ids.filtered(
-                lambda ptav:
-                    ptav.price_extra and
-                    ptav not in product.product_template_attribute_value_ids
-            )
-        ]
-        if no_variant_attributes_price_extra:
-            product = product.with_context(
-                no_variant_attributes_price_extra=no_variant_attributes_price_extra
-            )
+#         no_variant_attributes_price_extra = [
+#             ptav.price_extra for ptav in self.product_no_variant_attribute_value_ids.filtered(
+#                 lambda ptav:
+#                     ptav.price_extra and
+#                     ptav not in product.product_template_attribute_value_ids
+#             )
+#         ]
+#         if no_variant_attributes_price_extra:
+#             product = product.with_context(
+#                 no_variant_attributes_price_extra=no_variant_attributes_price_extra
+#             )
 
         if self.order_id.pricelist_id.discount_policy == 'with_discount':
             return product.with_context(pricelist=self.order_id.pricelist_id.id).price
