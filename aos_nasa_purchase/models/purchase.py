@@ -154,7 +154,7 @@ class PurchaseOrderLine(models.Model):
              "Otherwise, this includes goods stored in any Stock Location "
              "with 'internal' type.")
     range_qty = fields.Char(
-        'Range Stock', compute='_compute_range_message', store=False,
+        'Range Stock', #compute='_compute_range_message', store=False,
         help="Current quantity of products.\n"
              "In a context with a single Stock Location, this includes "
              "goods stored at this Location, or any of its children.\n"
@@ -255,7 +255,7 @@ class PurchaseOrderLine(models.Model):
         self.name = product_lang.display_name
         if product_lang.description_purchase:
             self.name = product_lang.description_purchase
-
+        self.range_qty = self._compute_range_message()
         self._compute_tax_id()
 
         self._suggest_quantity()
