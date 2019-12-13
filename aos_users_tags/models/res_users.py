@@ -34,6 +34,6 @@ class ResCompany(models.Model):
     
 class ResUsers(models.Model):
     _inherit = "res.users"
-    _inherit = ['res.users', 'mail.thread', 'ir.needaction_mixin']
+    _inherit = ['res.users', 'mail.thread', 'mail.activity.mixin']
     
     category_id = fields.Many2many('res.users.category', column1='user_id', column2='category_id', string='Tags')
