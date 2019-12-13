@@ -24,11 +24,11 @@ class StockMoveLine(models.Model):
             if mline.partner_id and mline.location_id.usage in ('customer','supplier'):
                 mline.display_location_id = mline.partner_id.name
             else:
-                mline.display_location_id = mline.location_id.name
+                mline.display_location_id = mline.location_id.display_name
             if mline.partner_id and mline.location_dest_id.usage in ('customer','supplier'):
                 mline.display_location_dest_id = mline.partner_id.name
             else:
-                mline.display_location_dest_id = mline.location_dest_id.name
+                mline.display_location_dest_id = mline.location_dest_id.display_name
             mline.group_id = mline.picking_id and mline.picking_id.group_id and mline.picking_id.group_id.name \
                 or mline.picking_id and mline.picking_id.origin or ''
             #mline.display_location_dest_id = mline.partner_id and mline.partner_id.name if mline.location_dest_id.usage in ('customer','supplier') else mline.location_dest_id.display_name
