@@ -61,6 +61,7 @@
 			                    <field name="total_penjualan"/>          
 			                    <field name="kode_gudang"/> 
                                 <field name="payment_date"/>
+                                <field name="journal_code"/>
                             </group>                            
                             <group>
                					<label string="Pembayaran via Transfer, Pot Rabat, Fee Gudang" for="payment_title" colspan="4"/>
@@ -102,7 +103,7 @@
                                     <field name="desc" placeholder="Keterangan" style="width: 32%%"/> 
 	                                <field name="currency_id" options="{'no_create': True, 'no_open': True}" groups="base.group_multi_currency"/>
                                     <field name="payment_method_code" invisible="1"/>     
-                                </div>  
+                                </div>
                                 <field name="payment_difference" string="Kekurangan" attrs="{'invisible': [('payment_difference', '=', 0.0)]}"/>
                                 <!-- <field name="amount"/>
                                 <field name="currency_id" options="{'no_create': True, 'no_open': True}" groups="base.group_multi_currency"/> -->
@@ -129,7 +130,7 @@
                                         <label for="writeoff_label" style="width: 45%%" class="oe_edit_only" string="Label"/>
                                         <field name="writeoff_label" style="width: 45%%" attrs="{'required': [('payment_difference_handling', '=', 'reconcile')]}"/>
                                     </div>
-                                </div>              
+                                </div>     
                                 <field name="saldo_stockist_akhir"/>
                                 <field name="total_debit"/>
                                 <field name="total_credit"/>  
