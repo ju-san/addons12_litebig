@@ -323,7 +323,7 @@
 	        parent="contacts.menu_contacts"
 	        sequence="20"
 	        groups="aos_nasa_partner.group_partner_vendor_manager_nasa"
-	        action="base.action_partner_supplier_form"/>
+	        action="base.action_partner_supplier_nasa_form"/>
         
         <record id="action_partner_pusat_nasa_form" model="ir.actions.act_window">
             <field name="name">Kantor Pelayanan</field>
@@ -371,7 +371,7 @@
 	        groups="aos_nasa_partner.group_partner_contact_manager_nasa"
 	        action="action_partner_pusat_nasa_form"/>
 	        
-	    <record id="contacts.action_contacts" model="ir.actions.act_window">
+	    <record id="action_contacts_nasa" model="ir.actions.act_window">
 	        <field name="name">Distributor</field>
 	        <field name="type">ir.actions.act_window</field>
 	        <field name="res_model">res.partner</field>
@@ -393,7 +393,7 @@
 	        <field name="view_mode">kanban</field>
 	        <field name="view_id" ref="base.res_partner_kanban_view"/>
 	        <field name="act_window_id" ref="contacts.action_contacts"/>
-	    </record>
+	    </record>-->
 	    <record id="contacts.action_contacts_view_tree" model="ir.actions.act_window.view">
 	        <field name="sequence" eval="1"/>
 	        <field name="view_mode">tree</field>
@@ -405,10 +405,10 @@
 	        <field name="view_mode">form</field>
 	        <field name="view_id" ref="base.view_partner_form"/>
 	        <field name="act_window_id" ref="contacts.action_contacts"/>
-	    </record> -->
+	    </record> 
 	    <menuitem id="contacts.res_partner_menu_contacts"
 	        name="Distributor"
-	        action="contacts.action_contacts"
+	        action="action_contacts_nasa"
 	        parent="contacts.menu_contacts"
 	        sequence="20"/>
 	        
