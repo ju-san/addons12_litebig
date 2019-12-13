@@ -9,6 +9,12 @@ from odoo.osv import expression
 
 ADDRESS_FIELDS = ('street', 'street2', 'rt', 'rw', 'kecamatan_id', 'kabupaten_id', 'zip', 'city', 'state_id', 'country_id')
 
+
+class PartnerCategory(models.Model):
+    _inherit = 'res.partner.category'
+
+    code = fields.Char(string='Tag Code', required=True)
+    
 class ResPartner(models.Model):    
     _name = "res.partner"
     _inherit = ['res.partner', 'mail.thread']
