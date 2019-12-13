@@ -161,7 +161,7 @@ class SplitPicking(models.TransientModel):
                 'picking_type_id': picking_type_id,
                 'state': 'draft',
                 'origin': _("%s") % self.picking_id.name,
-                'partner_id': self.partner_id and self.partner_id.id,
+                'partner_id': self.picking_id.partner_id and self.picking_id.partner_id.id,
                 'location_id': self.picking_id.location_id.id,
                 'location_dest_id': self.location_id.id,
                 'show_mark_as_todo': True
