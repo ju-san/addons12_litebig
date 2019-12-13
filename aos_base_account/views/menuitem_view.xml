@@ -11,6 +11,7 @@
         <menuitem name="Taxes" id="menu_finance_taxes" parent="account.menu_finance" 
         		groups="aos_base_account.group_accounting_taxes"
         		sequence="3"/>
-	
+		<menuitem action="account.action_account_chart_template_form" id="menu_action_account_chart_template_form" parent="account.account_account_menu" groups="account.group_account_user" sequence="3"/>
+
     </data>
 </odoo> 
