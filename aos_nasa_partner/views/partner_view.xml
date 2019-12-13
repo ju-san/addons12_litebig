@@ -14,8 +14,8 @@
             <field eval="8" name="priority"/>
             <field name="arch" type="xml">
                 <tree string="Contacts">
-					<field name="vendor_ref"/>
-                    <field name="display_name" string="Name"/>
+                    <field name="name" string="Kode Supplier"/>
+					<field name="vendor_ref" string="Nama Supplier"/>
                     <field name="function" invisible="1"/>
                     <field name="phone"/>
                     <field name="email"/>
@@ -36,7 +36,7 @@
 				<xpath expr="//field[@name='display_name']/.." position="attributes">
                 	<attribute name="colors">blue: state=='draft';</attribute>
 				</xpath>
-				<field name="display_name" position="before">
+				<field name="display_name" position="after">
 					<field name="customer_ref"/>
 				</field>
 				<field name="parent_id" position="after">
