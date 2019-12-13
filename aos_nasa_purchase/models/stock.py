@@ -11,6 +11,7 @@ class StockPicking(models.Model):
     active = fields.Boolean(
         'Active', default=True,
         help="If unchecked, it will allow you to hide the picking without removing it.") 
+    is_return = fields.Boolean('Is Return')
     #show_range_qty = fields.Boolean('Show Range Qty', default=True)
     
             

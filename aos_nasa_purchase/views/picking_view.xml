@@ -11,6 +11,9 @@
 	        	<field name="state" position="after">
                     <field name="active" invisible="1"/>
                 </field>
+	        	<field name="origin" position="after">
+              		<field name="is_return"/>
+                </field>
 	        </field>
 	    </record>
 	    
@@ -26,6 +29,9 @@
                             options='{"terminology": "archive"}'/>
                     </button>
                 </div>
+	        	<field name="origin" position="after">
+              		<field name="is_return"/>
+                </field>
 	        </field>
 	    </record>
 	    
