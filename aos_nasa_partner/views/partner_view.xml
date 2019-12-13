@@ -287,7 +287,7 @@
 	        parent="contacts.menu_contacts"
 	        sequence="5"
 	        groups="aos_nasa_partner.group_partner_employee_manager_nasa"
-	        action="action_partner_stockist_form"/>
+	        action="action_partner_stockist_center_form"/>
 
         <record id="action_partner_supplier_nasa_form" model="ir.actions.act_window">
             <field name="name">Suppliers</field>
