@@ -219,7 +219,7 @@ class AccountPayment(models.Model):
         elif self._context.get('journal2'):
             account_id = self.payment_type in ('outbound','transfer') and self._context.get('journal2').default_debit_account_id.id or self._context.get('journal2').default_credit_account_id.id
         elif self._context.get('journal3'):
-            account_id = self.payment_type in ('outbound','transfer') and self.payment_type in ('outbound','transfer') amd self._context.get('journal3').default_debit_account_id.id or self._context.get('journal3').default_credit_account_id.id
+            account_id = self.payment_type in ('outbound','transfer') and self.payment_type in ('outbound','transfer') and self._context.get('journal3').default_debit_account_id.id or self._context.get('journal3').default_credit_account_id.id
         else:
             account_id = self.payment_type in ('outbound','transfer') and self.journal_id.default_debit_account_id.id or self.journal_id.default_credit_account_id.id
         #print ('===x===',self.payment_type,account_id,self._context.get('journal1'),self._context.get('journal2'),self._context.get('journal3'))
