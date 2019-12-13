@@ -41,7 +41,7 @@ class PurchaseOrder(models.Model):
     active = fields.Boolean(
         'Active', default=True,
         help="If unchecked, it will allow you to hide the purchase order without removing it.") 
-    customer_ref = fields.Char('Nama Stockist', related='company_id.partner_id.customer_ref')
+    customer_ref = fields.Char('Nama Mitra Usaha', related='company_id.partner_id.customer_ref')
     pilih_alamat = fields.Selection([('sama','Alamat sesuai data'),('baru','Alamat baru')], string='Pilih Alamat', default='sama')
     street = fields.Text('Alamat Manual')
     #wh_picking_type_id = fields.Many2one('stock.warehouse', 'Deliver To', states=Purchase.READONLY_STATES, required=True,help="This will determine operation type of incoming shipment")
