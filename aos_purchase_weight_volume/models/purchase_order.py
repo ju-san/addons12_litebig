@@ -31,9 +31,9 @@ class PurchaseOrder(models.Model):
             rec.volume = volume_tot#round_up(volume_tot)
     
     #use_landed_costs = fields.Boolean('Is Import')
-    show_wv = fields.Boolean('Weight/Volume')
-    weight = fields.Float(string='Total Weight (kg)', compute='_compute_weight', store=True)
-    volume = fields.Float(string='Total Volume (m³)', compute='_compute_weight', store=True)
+    show_wv = fields.Boolean('Weight/Volume', default=True)
+    weight = fields.Float(string='Total Weight (kg)', compute='_compute_weight', store=True, digits=dp.get_precision('Stock Weight'))
+    volume = fields.Float(string='Total Volume (m³)', compute='_compute_weight', store=True, digits=dp.get_precision('Volume'))
 
 class PurchaseOrderLine(models.Model):
     _inherit = "purchase.order.line"
@@ -56,9 +56,9 @@ class PurchaseOrderLine(models.Model):
             #height_dimension','length_dimension','width_dimension', 'product_package_po'                    
             #line.tot_volume = line.product_id.volume * line.product_qty
             
-    weight = fields.Float(compute='_get_weight', string='Unit Weight', default=0.0, digits=(16,2))#, digits=dp.get_precision('Stock Weight'))
+    weight = fields.Float(compute='_get_weight', string='Unit Weight', default=0.0, digits=dp.get_precision('Stock Weight'))
     volume = fields.Float(compute='_get_weight', string='Unit Volume', default=0.0, digits=dp.get_precision('Volume'))
-    tot_weight = fields.Float(compute='_compute_weight', string='Tot. Weight', default=0.0, digits=(16,2))#, digits=dp.get_precision('Stock Weight'))
+    tot_weight = fields.Float(compute='_compute_weight', string='Tot. Weight', default=0.0, digits=dp.get_precision('Stock Weight'))
     tot_volume = fields.Float(compute='_compute_weight', string='Tot. Volume', default=0.0, digits=dp.get_precision('Volume'))
     #shipping_weight = fields.Float(compute='_compute_ship_weight', string="Ship. Weight", digits=dp.get_precision('Stock Weight'), store=True)
 

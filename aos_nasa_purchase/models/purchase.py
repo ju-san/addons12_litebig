@@ -104,7 +104,7 @@ class PurchaseOrderLine(models.Model):
                 operation = '>='
                 #break
             i+=1
-        #print ('===virtual_available===',operation,virtual_available,range_available)
+        print ('===virtual_available===',operation,virtual_available,range_available)
         message_dict = {
             'operation':  _('%s') % (operation),
             'range_available': _('%s') % (int(range_available)),

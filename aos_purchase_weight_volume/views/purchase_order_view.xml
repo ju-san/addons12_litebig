@@ -8,12 +8,12 @@
         <field name="inherit_id" ref="purchase.purchase_order_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='company_id']" position="after">
-                <field name="show_wv"/>
+                <field name="show_wv" invisible="1"/>
             </xpath>
             <xpath expr="//field[@name='order_line']/tree/field[@name='taxes_id']" position="after">
         		<!-- <field name="inland_type" invisible="1"/> -->
-        		<field name="weight" attrs="{'column_invisible': [('parent.show_wv', '=', False)]}" groups="aos_base_purchase.group_landed_cost_by_weight"/>
-        		<field name="volume" attrs="{'column_invisible': [('parent.show_wv', '=', False)]}" groups="aos_base_purchase.group_landed_cost_by_volume"/>
+        		<field name="weight" invisible="1" attrs="{'column_invisible': [('parent.show_wv', '=', False)]}" groups="aos_base_purchase.group_landed_cost_by_weight"/>
+        		<field name="volume" invisible="1" attrs="{'column_invisible': [('parent.show_wv', '=', False)]}" groups="aos_base_purchase.group_landed_cost_by_volume"/>
                 <field name="tot_volume" attrs="{'column_invisible': [('parent.show_wv', '=', False)]}" groups="aos_base_purchase.group_landed_cost_by_volume" sum="Total Volume"/>
                 <field name="tot_weight" attrs="{'column_invisible': [('parent.show_wv', '=', False)]}" groups="aos_base_purchase.group_landed_cost_by_weight" sum="Total Weight"/>
             </xpath>
@@ -26,7 +26,7 @@
 					<label for="weight" class="oe_inline"/>
                     <field name="weight" class="oe_inline"/>  <span>kg</span>
                 </div>
-				<div groups="aos_base_purchase.group_landed_cost_by_volume" attrs="{'invisible': [('show_wv', '=', False)]}">
+				<div groups="aos_base_purchase.group_landed_cost_by_volume" invisible="1" attrs="{'invisible': [('show_wv', '=', False)]}">
 					<label for="weight" class="oe_inline"/>
                     <field name="volume" class="oe_inline"/>  <span>m³</span>
                 </div>
