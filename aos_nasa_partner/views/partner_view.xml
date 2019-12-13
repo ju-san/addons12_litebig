@@ -323,7 +323,7 @@
 	        parent="contacts.menu_contacts"
 	        sequence="20"
 	        groups="aos_nasa_partner.group_partner_vendor_manager_nasa"
-	        action="base.action_partner_supplier_nasa_form"/>
+	        action="action_partner_supplier_nasa_form"/>
         
         <record id="action_partner_pusat_nasa_form" model="ir.actions.act_window">
             <field name="name">Kantor Pelayanan</field>
