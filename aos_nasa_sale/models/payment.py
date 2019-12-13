@@ -37,58 +37,6 @@ class account_abstract_payment(models.AbstractModel):
     amount3 = fields.Monetary(string='Payment Amount 3')
     desc = fields.Char('Keterangan')
     
-    @api.model
-    def default_get(self, fields):
-        rec = super(account_abstract_payment, self).default_get(fields)
-        active_ids = self._context.get('active_ids')
-        active_model = self._context.get('active_model')
-
-        # Check for selected invoices ids
-        if not active_ids or active_model != 'account.invoice':
-            return rec
-
-        invoices = self.env['account.invoice'].browse(active_ids)
-
-        # Check all invoices are open
-        if any(invoice.state != 'open' for invoice in invoices):
-            raise UserError(_("You can only register payments for open invoices"))
-        # Check all invoices have the same currency
-        if any(inv.currency_id != invoices[0].currency_id for inv in invoices):
-            raise UserError(_("In order to pay multiple invoices at once, they must use the same currency."))
-        # Check if, in batch payments, there are not negative invoices and positive invoices
-        dtype = invoices[0].type
-        for inv in invoices[1:]:
-            if inv.type != dtype:
-                if ((dtype == 'in_refund' and inv.type == 'in_invoice') or
-                        (dtype == 'in_invoice' and inv.type == 'in_refund')):
-                    raise UserError(_("You cannot register payments for vendor bills and supplier refunds at the same time."))
-                if ((dtype == 'out_refund' and inv.type == 'out_invoice') or
-                        (dtype == 'out_invoice' and inv.type == 'out_refund')):
-                    raise UserError(_("You cannot register payments for customer invoices and credit notes at the same time."))
-
-        # Look if we are mixin multiple commercial_partner or customer invoices with vendor bills
-        multi = any(inv.commercial_partner_id != invoices[0].commercial_partner_id
-            or MAP_INVOICE_TYPE_PARTNER_TYPE[inv.type] != MAP_INVOICE_TYPE_PARTNER_TYPE[invoices[0].type]
-            or inv.account_id != invoices[0].account_id
-            or inv.partner_bank_id != invoices[0].partner_bank_id
-            for inv in invoices)
-
-        currency = invoices[0].currency_id
-
-        total_amount = self._compute_payment_amount(invoices=invoices, currency=currency)
-
-        rec.update({
-            'amount': 0,#abs(total_amount),
-            'currency_id': currency.id,
-            'payment_type': total_amount > 0 and 'inbound' or 'outbound',
-            'partner_id': False if multi else invoices[0].commercial_partner_id.id,
-            'partner_type': False if multi else MAP_INVOICE_TYPE_PARTNER_TYPE[invoices[0].type],
-            'communication': ' '.join([ref for ref in invoices.mapped('reference') if ref])[:2000],
-            'invoice_ids': [(6, 0, invoices.ids)],
-            'multi': multi,
-        })
-        return rec
-    
     @api.depends('invoice_ids', 'amount', 'amount1', 'amount2', 'amount3', 'payment_date', 'currency_id')
     def _compute_payment_difference(self):
         for pay in self.filtered(lambda p: p.invoice_ids):
@@ -266,17 +214,21 @@ class AccountPayment(models.Model):
         name = self._context.get('desc1') or self._context.get('desc2') or self._context.get('desc3') or self.name
         if self.payment_type == 'transfer':
             name = _('Transfer to %s') % self.destination_journal_id.name
+        if self._context.get('journal1'):
+            account_id = self.payment_type in ('outbound','transfer') and self._context.get('journal1').default_debit_account_id.id or self._context.get('journal1').default_credit_account_id.id
+        elif self._context.get('journal2'):
+            account_id = self.payment_type in ('outbound','transfer') and self._context.get('journal2').default_debit_account_id.id or self._context.get('journal2').default_credit_account_id.id
+        elif self._context.get('journal3'):
+            account_id = self.payment_type in ('outbound','transfer') and self.payment_type in ('outbound','transfer') amd self._context.get('journal3').default_debit_account_id.id or self._context.get('journal3').default_credit_account_id.id
+        else:
+            account_id = self.payment_type in ('outbound','transfer') and self.journal_id.default_debit_account_id.id or self.journal_id.default_credit_account_id.id
+        #print ('===x===',self.payment_type,account_id,self._context.get('journal1'),self._context.get('journal2'),self._context.get('journal3'))
         vals = {
             'name': name,
-            'account_id': self.payment_type in ('outbound','transfer') and \
-                self._context.get('journal1') and (self._context.get('journal1').default_debit_account_id.id or self._context.get('journal1').default_credit_account_id.id) or \
-                self._context.get('journal2') and (self._context.get('journal2').default_debit_account_id.id or self._context.get('journal2').default_credit_account_id.id) or \
-                self._context.get('journal3') and (self._context.get('journal3').default_debit_account_id.id or self._context.get('journal3').default_credit_account_id.id) or \
-                self.journal_id.default_debit_account_id.id or self.journal_id.default_credit_account_id.id,
+            'account_id': account_id,
             'journal_id': self.journal_id.id,
             'currency_id': self.currency_id != self.company_id.currency_id and self.currency_id.id or False,
         }
-        #print ('----valll====',vals,self._context)
         # If the journal has a currency specified, the journal item need to be expressed in this currency
         if self.journal_id.currency_id and self.currency_id != self.journal_id.currency_id:
             amount = self.currency_id._convert(amount, self.journal_id.currency_id, self.company_id, self.payment_date or fields.Date.today())
