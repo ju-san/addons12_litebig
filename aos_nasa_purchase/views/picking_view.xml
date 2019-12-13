@@ -16,7 +16,27 @@
                 </field>
 	        </field>
 	    </record>
+        <record id="in_vpicktree_nasa" model="ir.ui.view">
+            <field name="name">stock.picking.tree.nasa</field>
+            <field name="model">stock.picking</field>
+	        <field name="inherit_id" ref="aos_base_stock.in_vpicktree"/>
+	        <field name="arch" type="xml">
+	        	<field name="origin" position="after">
+              		<field name="is_return"/>
+                </field>
+	        </field>
+	    </record>
 	    
+        <record id="out_vpicktree_nasa" model="ir.ui.view">
+            <field name="name">stock.picking.tree.nasa</field>
+            <field name="model">stock.picking</field>
+	        <field name="inherit_id" ref="aos_base_stock.out_vpicktree"/>
+	        <field name="arch" type="xml">
+	        	<field name="origin" position="after">
+              		<field name="is_return"/>
+                </field>
+	        </field>
+	    </record>
         <record id="view_picking_form_nasa" model="ir.ui.view">
             <field name="name">stock.picking.form.nasa</field>
             <field name="model">stock.picking</field>
