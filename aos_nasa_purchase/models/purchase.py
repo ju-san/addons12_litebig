@@ -61,18 +61,29 @@ class PurchaseOrder(models.Model):
         else:
             self.dest_partner_id = False
         
+    @api.multi
+    @api.onchange('warehouse_id')
+    def _onchange_warehouse_id(self):
+        if not self.warehouse_id:
+            return
+        for order in self:
+            for line in order.order_line:
+                line.location_id = self.warehouse_id.lot_stock_id.id
+                line.virtual_available = line.with_context(location=line.location_id)._compute_quantities()
+                line.range_qty = line._compute_range_message()
+        
 class PurchaseOrderLine(models.Model): 
     _inherit = 'purchase.order.line'
             
-    def _get_message_values(self):
-        """ Return the source, destination and picking_type applied on a stock
-        rule. The purpose of this function is to avoid code duplication in
-        _get_message_dict functions since it often requires those data.
-        """
-        qty_available = 0.0
-        virtual_available = self.virtual_available or 0.0
-        #operation = '<'
-        return qty_available, virtual_available#, operation
+#     def _get_message_values(self):
+#         """ Return the source, destination and picking_type applied on a stock
+#         rule. The purpose of this function is to avoid code duplication in
+#         _get_message_dict functions since it often requires those data.
+#         """
+#         qty_available = 0.0
+#         virtual_available = self.virtual_available or 0.0
+#         #operation = '<'
+#         return qty_available, virtual_available#, operation
     
     def _get_message_dict(self):
         """ Return a dict with the different possible message used for the
@@ -81,7 +92,8 @@ class PurchaseOrderLine(models.Model):
         purchase_stock in order to complete the dictionary.
         """
         message_dict = {}
-        qty_available, virtual_available = self._get_message_values()
+        #virtual_available = self._compute_quantities()
+#         qty_available, virtual_available = self._get_message_values()
         #min = formatLang(self.env, min, currency_obj=False)
         #max = formatLang(self.env, max, currency_obj=False)
         #{'value':{'operation':typeseller}}
@@ -90,21 +102,21 @@ class PurchaseOrderLine(models.Model):
         max_range = {'1': 1000, '2':10000, '3':100000, '4':1000000}
         i = 1
         for max in [1000, 10000, 100000, 1000000]:
-            if virtual_available <= 0.0:
+            if self.virtual_available <= 0.0:
                 range_available = max_range[str(i)]
                 operation = 'Indent'
                 break
-            elif virtual_available > 0.0 and virtual_available < max:
+            elif self.virtual_available > 0.0 and self.virtual_available < max:
                 #print ('===max==',max,str(i))
                 range_available = max_range[str(i)]
                 operation = '<'
                 break
-            elif virtual_available >= max_range['4']:
+            elif self.virtual_available >= max_range['4']:
                 range_available = max_range['4']
                 operation = '>='
                 #break
             i+=1
-        print ('===virtual_available===',operation,virtual_available,range_available)
+        #print ('===virtual_available===',operation,self.virtual_available,range_available)
         message_dict = {
             'operation':  _('%s') % (operation),
             'range_available': _('%s') % (int(range_available)),
@@ -114,26 +126,16 @@ class PurchaseOrderLine(models.Model):
     #@api.depends('virtual_available')
             
     #@api.depends('product_id.stock_move_ids.product_qty', 'product_id.stock_move_ids.state')
-    def _compute_quantities(self):
-        for move in self:
-            if not move.product_id:
-                return
-            location_id = False
-            if move.sudo().location_id.usage == 'internal':
-                location_id = move.sudo().location_id.id
-            if location_id:
-                res = move.product_id.sudo().with_context(location=location_id)._compute_quantities_dict(self._context.get('lot_id'), self._context.get('owner_id'), self._context.get('package_id'), self._context.get('from_date'), self._context.get('to_date'))
-                if res[move.product_id.id].get('virtual_available'):
-                    move.virtual_available = res[move.product_id.id]['virtual_available']
+    #warehouse_id.lot_stock_id
                     #print ('==_compute_quantities=',location_id,move.virtual_available)
     
     warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse',
         required=True, related='order_id.warehouse_id')
     location_id = fields.Many2one(
-        'stock.location', 'Location', compute_sudo=True, related='warehouse_id.lot_stock_id', required=False,
+        'stock.location', 'Location', compute_sudo=True, required=False,
         help="Sets a location if you produce at a fixed location. This can be a partner location if you subcontract the manufacturing operations.")
     virtual_available = fields.Float(
-        'Forecast Quantity', compute='_compute_quantities', store=False,
+        'Forecast Quantity', #compute='_compute_quantities', store=False,
         digits=dp.get_precision('Product Unit of Measure'),
         help="Forecast quantity (computed as Quantity On Hand "
              "- Outgoing + Incoming)\n"
@@ -193,7 +195,44 @@ class PurchaseOrderLine(models.Model):
         # negative discounts (= surcharge) are included in the display price
         return max(base_price, final_price)
     
-    @api.onchange('product_id')
+    #@api.onchange('location_id')
+    def _compute_locations(self):
+        #for move in self:
+#         if not self.product_id:
+#             return
+#         virtual_available = 0.0
+#         location_id = False
+#         if self.sudo().location_id.usage == 'internal':
+#             location_id = self.sudo().location_id.id
+#         if location_id:
+#             res = self.product_id.sudo().with_context(location=location_id)._compute_quantities_dict(self._context.get('lot_id'), self._context.get('owner_id'), self._context.get('package_id'), self._context.get('from_date'), self._context.get('to_date'))
+#             if res[self.product_id.id].get('virtual_available'):
+#                 virtual_available = res[self.product_id.id]['virtual_available']
+#         print ('--virtual_available--',self.sudo().location_id,virtual_available)
+        location_id = False
+        if self.order_id.warehouse_id:
+            location_id = self.order_id.warehouse_id and self.order_id.warehouse_id.lot_stock_id.id
+        return location_id
+    
+    #@api.onchange('location_id')
+    def _compute_quantities(self):
+        #for move in self:
+        if not self.product_id:
+            return
+        virtual_available = 0.0
+        location_id = False
+        if self._context.get('location'):
+            location_id = self._context.get('location').id
+        if not location_id and self.sudo().location_id.usage == 'internal':
+            location_id = self.sudo().location_id.id
+        if location_id:
+            res = self.product_id.sudo().with_context(location=location_id)._compute_quantities_dict(self._context.get('lot_id'), self._context.get('owner_id'), self._context.get('package_id'), self._context.get('from_date'), self._context.get('to_date'))
+            if res[self.product_id.id].get('virtual_available'):
+                virtual_available = res[self.product_id.id]['virtual_available']
+        #print ('--virtual_available--',self.sudo().location_id,virtual_available)
+        return virtual_available
+        
+    #@api.onchange('location_id')
     def _compute_range_message(self):
         #for pline in self:
         message_dict = self._get_message_dict()
@@ -202,7 +241,8 @@ class PurchaseOrderLine(models.Model):
             message = message_dict['operation']
         elif message_dict['operation'] in ('<', '>='):
             message = message_dict['operation'] + ' ' + message_dict['range_available']
-        self.range_qty = message
+        #print ('--_get_message_dict--',message)
+        return message
 
     @api.onchange('product_qty', 'product_uom')
     def _onchange_quantity(self):
@@ -270,7 +310,9 @@ class PurchaseOrderLine(models.Model):
         self.name = product_lang.display_name
         if product_lang.description_purchase:
             self.name = product_lang.description_purchase
-        self._compute_range_message()
+        self.location_id = self._compute_locations()#self.order_id.warehouse_id.lot_stock_id.id
+        self.virtual_available = self._compute_quantities()
+        self.range_qty = self._compute_range_message()
         self._compute_tax_id()
 
         self._suggest_quantity()
