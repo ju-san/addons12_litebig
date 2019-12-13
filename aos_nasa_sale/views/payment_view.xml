@@ -65,20 +65,32 @@
                             <group>
                					<label string="Pembayaran via Transfer, Pot Rabat, Fee Gudang" for="payment_title" colspan="4"/>
                 				<div name="journal_nonbank_id1" class="address_format" colspan="4">
-									<field name="journal_nonbank_id1" domain="[('type','=','nonbank')]" options="{'no_create': True, 'no_open': True}" placeholder="Transfer/Pot Rabat/Fee Gudang" style="width: 33%%"/> 
+									<field name="journal_nonbank_id1" domain="[('type','in',('bank','nonbank'))]" options="{'no_create': True, 'no_open': True}" placeholder="Transfer/Pot Rabat/Fee Gudang" style="width: 33%%"/> 
 									<field name="desc1" placeholder="Keterangan" style="width: 33%%"/> 
 				                    <field name="amount1" placeholder="Total" style="width: 32%%"/>
 				                </div>
                 				<div name="journal_nonbank_id2" class="o_address_format" colspan="4">
-									<field name="journal_nonbank_id2" domain="[('type','=','nonbank')]" options="{'no_create': True, 'no_open': True}" placeholder="Transfer/Pot Rabat/Fee Gudang" style="width: 33%%"/> 
+									<field name="journal_nonbank_id2" domain="[('type','in',('bank','nonbank'))]" options="{'no_create': True, 'no_open': True}" placeholder="Transfer/Pot Rabat/Fee Gudang" style="width: 33%%"/> 
 									<field name="desc2" placeholder="Keterangan" style="width: 33%%"/> 
 				                    <field name="amount2" placeholder="Total" style="width: 32%%"/>
                                 </div>
                 				<div name="journal_nonbank_id3" class="o_address_format" colspan="4">
-									<field name="journal_nonbank_id3" domain="[('type','=','nonbank')]" options="{'no_create': True, 'no_open': True}" placeholder="Transfer/Pot Rabat/Fee Gudang" style="width: 33%%"/> 
+									<field name="journal_nonbank_id3" domain="[('type','in',('bank','nonbank'))]" options="{'no_create': True, 'no_open': True}" placeholder="Transfer/Pot Rabat/Fee Gudang" style="width: 33%%"/> 
 									<field name="desc3" placeholder="Keterangan" style="width: 33%%"/> 
 				                    <field name="amount3" placeholder="Total" style="width: 32%%"/>
-                                </div>        
+                                </div>  
+                				<div name="journal_nonbank_id4" class="o_address_format" colspan="4">
+									<field name="journal_nonbank_id4" domain="[('type','in',('bank','nonbank'))]" options="{'no_create': True, 'no_open': True}" placeholder="Transfer/Pot Rabat/Fee Gudang" style="width: 33%%"/> 
+									<field name="desc4" placeholder="Keterangan" style="width: 33%%"/> 
+				                    <field name="amount4" placeholder="Total" style="width: 32%%"/>
+                                </div> 
+                				<div name="journal_nonbank_id5" class="o_address_format" colspan="4">
+									<field name="journal_nonbank_id5" domain="[('type','in',('bank','nonbank'))]" options="{'no_create': True, 'no_open': True}" placeholder="Transfer/Pot Rabat/Fee Gudang" style="width: 33%%"/> 
+									<field name="desc5" placeholder="Keterangan" style="width: 33%%"/> 
+				                    <field name="amount5" placeholder="Total" style="width: 32%%"/>
+                                </div> 	                                
+                                <field name="total_transfer_amount" string="Total"/>
+                                <field name="kekurangan_transfer_amount" string="Kekurangan"/>
                                 <label string="Pembayaran Tunai" for="amount" colspan="4"/>
                                 <div name="amount_div" class="o_address_format" colspan="4">
 	                                <field name="hide_payment_method" invisible="1"/>
@@ -86,11 +98,12 @@
 	                                <field name="partner_bank_account_id" attrs="{'invisible': [('show_partner_bank_account', '!=', True)], 'required': [('show_partner_bank_account', '=', True)], 'readonly': [('state', '!=', 'draft')]}" context="{'default_partner_id': partner_id}"/>
 	                                <field name="show_partner_bank_account" invisible="1"/>
                                     <field name="amount" style="width: 33%%"/>                               
-	                                <field name="journal_id" style="width: 33%%" widget="selection" attrs="{'invisible': [('amount', '=', 0)]}"/>
+	                                <field name="journal_id" domain="[('type','=','cash')]" style="width: 33%%" widget="selection" attrs="{'invisible': [('amount', '=', 0)]}"/>
                                     <field name="desc" placeholder="Keterangan" style="width: 32%%"/> 
 	                                <field name="currency_id" options="{'no_create': True, 'no_open': True}" groups="base.group_multi_currency"/>
                                     <field name="payment_method_code" invisible="1"/>     
-                                </div>       
+                                </div>  
+                                <field name="payment_difference" string="Kekurangan" attrs="{'invisible': [('payment_difference', '=', 0.0)]}"/>
                                 <!-- <field name="amount"/>
                                 <field name="currency_id" options="{'no_create': True, 'no_open': True}" groups="base.group_multi_currency"/> -->
                                	<!-- <field name="journal_id" widget="selection" attrs="{'invisible': [('amount', '=', 0)]}"/>
@@ -106,7 +119,7 @@
                             <group>
                                 <label string="Kekurangan" for="payment_difference" attrs="{'invisible': [('payment_difference', '=', 0.0)]}" colspan="4"/>
                                 <div attrs="{'invisible': [('payment_difference', '=', 0.0)]}" colspan="4">
-                                    <field name="payment_difference"/>
+                                    <!-- <field name="payment_difference"/> -->
                                     <field name="payment_difference_handling" widget="radio" nolabel="1"/>
                                     <div attrs="{'invisible': [('payment_difference_handling','=','open')]}">
                                         <label for="writeoff_account_id" style="width: 45%%" class="oe_edit_only" string="Sisa Pembayaran"/>

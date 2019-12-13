@@ -25,7 +25,7 @@ class account_abstract_payment(models.AbstractModel):
     _description = "Contains the logic shared between models which allows to register payments"
     
     payment_difference = fields.Monetary(compute='_compute_payment_difference', readonly=True)
-    payment_difference_handling = fields.Selection([('open', 'Akan dibayarkan kembali'), ('reconcile', 'Cashback/Saldo Stockist')], default='open', string="Payment Difference Handling", copy=False)
+    payment_difference_handling = fields.Selection([('open', 'Akan dibayarkan kembali'), ('reconcile', 'Cashback/Saldo Stockist')], default='open', string="Sisa Kekurangan", copy=False)
     journal_nonbank_id1 = fields.Many2one('account.journal', 'Journal Non Bank 1')
     desc1 = fields.Char('Keterangan')
     amount1 = fields.Monetary(string='Payment Amount 1')
@@ -35,13 +35,28 @@ class account_abstract_payment(models.AbstractModel):
     journal_nonbank_id3 = fields.Many2one('account.journal', 'Journal Non Bank 3')
     desc3 = fields.Char('Keterangan')
     amount3 = fields.Monetary(string='Payment Amount 3')
+    journal_nonbank_id4 = fields.Many2one('account.journal', 'Journal Non Bank 4')
+    desc4 = fields.Char('Keterangan')
+    amount4 = fields.Monetary(string='Payment Amount 4')
+    journal_nonbank_id5 = fields.Many2one('account.journal', 'Journal Non Bank 5')
+    desc5 = fields.Char('Keterangan')
+    amount5 = fields.Monetary(string='Payment Amount 5')
     desc = fields.Char('Keterangan')
+    total_transfer_amount = fields.Monetary(compute='_kekurangan_transfer_amount', readonly=True)
+    kekurangan_transfer_amount = fields.Monetary(compute='_kekurangan_transfer_amount', readonly=True)
     
-    @api.depends('invoice_ids', 'amount', 'amount1', 'amount2', 'amount3', 'payment_date', 'currency_id')
+    @api.depends('invoice_ids', 'amount', 'amount1', 'amount2', 'amount3', 'amount4', 'amount5', 'payment_date', 'currency_id')
     def _compute_payment_difference(self):
         for pay in self.filtered(lambda p: p.invoice_ids):
-            payment_amount = -pay.amount-pay.amount1-pay.amount2-pay.amount3 if pay.payment_type == 'outbound' else pay.amount+pay.amount1+pay.amount2+pay.amount3
+            payment_amount = -pay.amount-pay.amount1-pay.amount2-pay.amount3-pay.amount4-pay.amount5 if pay.payment_type == 'outbound' else pay.amount+pay.amount1+pay.amount2+pay.amount3+pay.amount4+pay.amount5
             pay.payment_difference = pay._compute_payment_amount() - payment_amount
+    
+    @api.depends('invoice_ids', 'amount', 'amount1', 'amount2', 'amount3', 'amount4', 'amount5', 'payment_date', 'currency_id')
+    def _kekurangan_transfer_amount(self):
+        for pay in self.filtered(lambda p: p.invoice_ids):
+            payment_amount = pay.amount1-pay.amount2-pay.amount3-pay.amount4-pay.amount5 if pay.payment_type == 'outbound' else pay.amount1+pay.amount2+pay.amount3+pay.amount4+pay.amount5
+            pay.total_transfer_amount = payment_amount
+            pay.kekurangan_transfer_amount = pay._compute_payment_amount() - payment_amount
     
 class AccountPayment(models.Model): 
     _inherit = 'account.payment'
@@ -121,8 +136,10 @@ class AccountPayment(models.Model):
             amount1 = rec.amount1 * (rec.payment_type in ('outbound', 'transfer') and 1 or -1)
             amount2 = rec.amount2 * (rec.payment_type in ('outbound', 'transfer') and 1 or -1)
             amount3 = rec.amount3 * (rec.payment_type in ('outbound', 'transfer') and 1 or -1)
+            amount4 = rec.amount4 * (rec.payment_type in ('outbound', 'transfer') and 1 or -1)
+            amount5 = rec.amount5 * (rec.payment_type in ('outbound', 'transfer') and 1 or -1)
             #amount_total = amount + amount1 + amount2 + amount3
-            move = rec.with_context(amount1=amount1,amount2=amount2,amount3=amount3)._create_payment_entry(amount)
+            move = rec.with_context(amount1=amount1,amount2=amount2,amount3=amount3,amount4=amount4,amount5=amount5)._create_payment_entry(amount)
             persist_move_name = move.name
 
             # In case of a transfer, the first journal entry created debited the source liquidity account and credited
@@ -144,10 +161,14 @@ class AccountPayment(models.Model):
         amount1 = self._context.get('amount1')
         amount2 = self._context.get('amount2')
         amount3 = self._context.get('amount3')
+        amount4 = self._context.get('amount4')
+        amount5 = self._context.get('amount5')
         debit, credit, amount_currency, currency_id = aml_obj.with_context(date=self.payment_date)._compute_amount_fields(amount, self.currency_id, self.company_id.currency_id)
         debit1, credit1, amount_currency1, currency_id = aml_obj.with_context(date=self.payment_date)._compute_amount_fields(amount1, self.currency_id, self.company_id.currency_id)
         debit2, credit2, amount_currency2, currency_id = aml_obj.with_context(date=self.payment_date)._compute_amount_fields(amount2, self.currency_id, self.company_id.currency_id)
         debit3, credit3, amount_currency3, currency_id = aml_obj.with_context(date=self.payment_date)._compute_amount_fields(amount3, self.currency_id, self.company_id.currency_id)
+        debit4, credit4, amount_currency4, currency_id = aml_obj.with_context(date=self.payment_date)._compute_amount_fields(amount4, self.currency_id, self.company_id.currency_id)
+        debit5, credit5, amount_currency5, currency_id = aml_obj.with_context(date=self.payment_date)._compute_amount_fields(amount5, self.currency_id, self.company_id.currency_id)
 
         move = self.env['account.move'].create(self._get_move_vals())
 
@@ -220,9 +241,13 @@ class AccountPayment(models.Model):
             account_id = self.payment_type in ('outbound','transfer') and self._context.get('journal2').default_debit_account_id.id or self._context.get('journal2').default_credit_account_id.id
         elif self._context.get('journal3'):
             account_id = self.payment_type in ('outbound','transfer') and self.payment_type in ('outbound','transfer') and self._context.get('journal3').default_debit_account_id.id or self._context.get('journal3').default_credit_account_id.id
+        elif self._context.get('journal4'):
+            account_id = self.payment_type in ('outbound','transfer') and self.payment_type in ('outbound','transfer') and self._context.get('journal4').default_debit_account_id.id or self._context.get('journal4').default_credit_account_id.id
+        elif self._context.get('journal5'):
+            account_id = self.payment_type in ('outbound','transfer') and self.payment_type in ('outbound','transfer') and self._context.get('journal5').default_debit_account_id.id or self._context.get('journal5').default_credit_account_id.id
         else:
             account_id = self.payment_type in ('outbound','transfer') and self.journal_id.default_debit_account_id.id or self.journal_id.default_credit_account_id.id
-        print ('===x===',account_id)
+        #print ('===x===',account_id)
         vals = {
             'name': name,
             'account_id': account_id,
