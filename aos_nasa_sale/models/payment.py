@@ -44,7 +44,7 @@ class account_abstract_payment(models.AbstractModel):
     desc = fields.Char('Keterangan')
     total_transfer_amount = fields.Monetary(compute='_kekurangan_transfer_amount', readonly=True)
     kekurangan_transfer_amount = fields.Monetary(compute='_kekurangan_transfer_amount', readonly=True)
-    journal_code = fields.Selection([('2', 'Receipt'),('3', 'Others')], string="Journal Code", default='2')
+    journal_code = fields.Selection([('2', '2. Receipt'),('3', '3. Others')], string="Journal Code", default='2')
     
     @api.depends('invoice_ids', 'amount', 'amount1', 'amount2', 'amount3', 'amount4', 'amount5', 'payment_date', 'currency_id')
     def _compute_payment_difference(self):
