@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+		<menuitem
+	        id="product_product_menu_root"
+	        name="Catalogs"
+	        icon="fa-envelope" 
+	        web_icon="aos_base_product,static/description/product.png"
+	        groups="base.group_user"
+	        sequence="5"/>
+	        
+        <!-- <menuitem id="product_menu_catalog" name="Products" action="product.product_template_action" parent="product_product_menu_root" groups="aos_product.group_product_stockable_info" sequence="5"/>
+        <menuitem id="menu_products" name="Stockable" action="product.product_normal_action_sell" parent="product_product_menu_root" groups="aos_product.group_product_stockable_info" sequence="10"/>
+        <menuitem id="menu_product" name="Variants" action="product.product_normal_action" parent="product_product_menu_root" groups="product.group_product_variant" sequence="15"/>
+        <menuitem id="menu_product_pricelist_main" name="Pricelists" parent="product_product_menu_root" action="product.product_pricelist_action2" groups="product.group_sale_pricelist" sequence="20"/> -->
+	        
+	    <menuitem id="catalog_product_config" name="Configuration" parent="product_product_menu_root" groups="aos_base_product.group_product_manager" sequence="99"/>
+	    <menuitem action="product.product_category_action_form"
+            id="product.menu_product_category_action_form" 
+            groups="aos_base_product.group_product_manager"
+            parent="catalog_product_config" sequence="99"/>
+        
+		<record id="product_template_form_view_aos_base_product" model="ir.ui.view">
+	        <field name="name">product.template.common.form.aos</field>
+	        <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">            	
+                <header position="inside">
+					<button name="confirm_product_template" groups="aos_base_product.group_stages_status_product" states="draft" string="Active" class="oe_highlight" type="object"/>
+					<button name="draft_product_template" groups="aos_base_product.group_stages_status_product" states="confirmed"  string="Not Active" type="object"/>
+					<field name="state" widget="statusbar" groups="aos_base_product.group_stages_status_product" statusbar_visible="draft,confirmed" statusbar_colors='{"confirmed":"blue"}' readonly="1"/>
+                </header> 
+            </field>
+        </record>
+
+</odoo>

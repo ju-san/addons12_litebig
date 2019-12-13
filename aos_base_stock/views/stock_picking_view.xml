@@ -1,0 +1,653 @@
+<?xml version="1.0"?>
+<odoo>
+	<data>
+		<record model="ir.ui.view" id="view_picking_type_form_print">
+            <field name="name">Operation Types</field>
+            <field name="model">stock.picking.type</field>
+	        <field name="inherit_id" ref="stock.view_picking_type_form"/>
+	        <field name="arch" type="xml">
+	            <xpath expr="//group[2]/group[2]" position="after">
+	                <group string="Additional Setting">
+		                <field name="split_assign_picking"/>
+                    </group>
+	            </xpath>
+	        </field>
+	    </record>
+	    
+		<record id="view_picking_base_stock_form" model="ir.ui.view">
+	        <field name="name">stock.picking.form</field>
+	        <field name="model">stock.picking</field>
+	        <field name="inherit_id" ref="stock.view_picking_form"/>
+	        <field name="arch" type="xml">
+	        	<field name="picking_type_id" position="after">
+	        		<field name="picking_ref"/>
+	        	</field>
+	        	<xpath expr="//button[@name='action_toggle_is_locked'][1]" position="attributes">
+	        		<attribute name="groups">aos_base_stock.group_access_to_lock</attribute>
+	        		<attribute name="string">Lock</attribute>
+	        	</xpath>
+	        	<xpath expr="//button[@name='action_toggle_is_locked'][2]" position="attributes">
+	        		<attribute name="groups">aos_base_stock.group_access_to_lock</attribute>
+	        		<attribute name="string">Unlock</attribute>
+	        	</xpath>
+	        	<button name="action_cancel" position="attributes">
+	        		<attribute name="groups">aos_base_stock.group_access_cancel_picking</attribute>
+	        	</button>
+	            <xpath expr="//button[@name='action_assign'][1]" position="attributes">
+	        		<attribute name="groups">aos_base_stock.group_access_to_reserve_unreserve</attribute>
+	            </xpath>
+	        	<button name="do_unreserve" position="attributes">
+	        		<attribute name="groups">aos_base_stock.group_access_to_reserve_unreserve</attribute>
+	        	</button>
+	        	<button name="button_scrap" position="attributes">
+	        		<attribute name="groups">aos_base_stock.group_access_to_scrap</attribute>
+	        	</button>
+        		<xpath expr="//sheet/group/group[1]/field[@name='location_id']" position="attributes">
+            		<attribute name="options">{'no_create': True}</attribute>
+            		<attribute name="attrs">{'invisible': [('picking_type_code', '=', 'incoming')], 'readonly': [('state','=','cancel')]}</attribute>
+	            </xpath>
+	            <xpath expr="//sheet/group/group[1]/field[@name='location_dest_id']" position="attributes">
+            		<attribute name="options">{'no_create': True}</attribute>
+            		<attribute name="attrs">{'invisible': [('picking_type_code', '=', 'outgoing')], 'readonly': [('state','=','cancel')]}</attribute>
+	            </xpath>
+	        </field>
+	    </record>
+	    
+        <record id="in_vpicktree" model="ir.ui.view">
+            <field name="name">stock.picking.in.tree</field>
+            <field name="model">stock.picking</field>
+            <field name="arch" type="xml">
+                <tree decoration-info="state == 'draft'" decoration-muted="state == 'cancel'" decoration-danger="state not in ('cancel', 'done') and scheduled_date &lt; current_date" string="Picking list">
+                    <field name="name"/>
+                    <field name="location_dest_id" groups="stock.group_stock_multi_locations"/>
+                    <field name="partner_id"/>
+                    <field name="date" invisible="1"/>
+                    <field name="scheduled_date" groups="base.group_no_one"/>
+                    <field name="date_done"/>
+                    <field name="origin"/>
+                    <field name="group_id" invisible="1"/>
+                    <field name="backorder_id"/>
+                    <field name="state"/>
+                    <field name="priority" invisible="1"/>
+                    <field name="picking_type_id" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="stock_picking_action_picking_type_in" model="ir.actions.act_window">
+            <field name="name">Receipts Items</field>
+            <field name="res_model">stock.picking</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,kanban,form,calendar</field>
+            <field name="domain">[('picking_type_code','=','incoming')]</field>
+            <field name="context">{
+                    'search_default_picking_type_id': [active_id],
+                    'default_picking_type_id': active_id,
+                    'contact_display': 'partner_address',
+            }
+            </field>
+            <field name="search_view_id" ref="stock.view_picking_internal_search"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click here to create a new transfer.
+              </p><p>
+                You can either do it immediately or mark it as Todo for future processing. Use your scanner to validate the transferred quantity quicker.
+              </p>
+            </field>
+        </record>
+        
+        <record id="stock_picking_action_picking_type_in_tree" model="ir.actions.act_window.view">
+            <field name="sequence">1</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="aos_base_stock.in_vpicktree"/>
+            <field name="act_window_id" ref="aos_base_stock.stock_picking_action_picking_type_in"/>
+        </record>
+
+        <record id="stock_picking_action_picking_type_in_form" model="ir.actions.act_window.view">
+            <field name="sequence">2</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="stock.view_picking_form"/>
+            <field name="act_window_id" ref="aos_base_stock.stock_picking_action_picking_type_in"/>
+        </record>
+        
+        <record id="out_vpicktree" model="ir.ui.view">
+            <field name="name">stock.picking.out.tree</field>
+            <field name="model">stock.picking</field>
+            <field name="arch" type="xml">
+                <tree decoration-info="state == 'draft'" decoration-muted="state == 'cancel'" decoration-danger="state not in ('cancel', 'done') and scheduled_date &lt; current_date" string="Picking list">
+                    <field name="name"/>
+                    <field name="location_dest_id" groups="stock.group_stock_multi_locations"/>
+                    <field name="partner_id"/>
+                    <field name="date" invisible="1"/>
+                    <field name="scheduled_date" groups="base.group_no_one"/>
+                    <field name="date_done"/>
+                    <field name="origin"/>
+                    <field name="group_id" invisible="1"/>
+                    <field name="backorder_id"/>
+                    <field name="state"/>
+                    <field name="priority" invisible="1"/>
+                    <field name="picking_type_id" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="stock_picking_action_picking_type_out" model="ir.actions.act_window">
+            <field name="name">Delivery Orders</field>
+            <field name="res_model">stock.picking</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,kanban,form,calendar</field>
+            <field name="domain">[('picking_type_code','=','outgoing')]</field>
+            <field name="context">{
+                    'search_default_picking_type_id': [active_id],
+                    'default_picking_type_id': active_id,
+                    'contact_display': 'partner_address',
+            }
+            </field>
+            <field name="search_view_id" ref="stock.view_picking_internal_search"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click here to create a new transfer.
+              </p><p>
+                You can either do it immediately or mark it as Todo for future processing. Use your scanner to validate the transferred quantity quicker.
+              </p>
+            </field>
+        </record>
+        <!-- INCOMING -->
+        <record id="stock_picking_action_picking_type_out_tree" model="ir.actions.act_window.view">
+            <field name="sequence">1</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="aos_base_stock.out_vpicktree"/>
+            <field name="act_window_id" ref="aos_base_stock.stock_picking_action_picking_type_out"/>
+        </record>
+
+        <record id="stock_picking_action_picking_type_out_form" model="ir.actions.act_window.view">
+            <field name="sequence">2</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="stock.view_picking_form"/>
+            <field name="act_window_id" ref="aos_base_stock.stock_picking_action_picking_type_out"/>
+        </record>
+        
+		<record id="action_picking_tree_done_in" model="ir.actions.act_window">
+            <field name="name">Done Transfers</field>
+            <field name="res_model">stock.picking</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,kanban,form,calendar</field>
+            <field name="domain">[('picking_type_code','=','incoming')]</field>
+            <field name="context">{
+                    'search_default_picking_type_id': [active_id],
+                    'default_picking_type_id': active_id,
+                    'contact_display': 'partner_address',
+                    'search_default_done': 1,
+            }
+            </field>
+            <field name="search_view_id" ref="stock.view_picking_internal_search"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click here to create a new transfer.
+              </p><p>
+                You can either do it immediately or mark it as Todo for future processing. Use your scanner to validate the transferred quantity quicker.
+              </p>
+            </field>
+        </record>
+        
+        <record id="action_picking_tree_done_in_tree" model="ir.actions.act_window.view">
+            <field name="sequence">1</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="aos_base_stock.in_vpicktree"/>
+            <field name="act_window_id" ref="aos_base_stock.action_picking_tree_done_in"/>
+        </record>
+
+        <record id="action_picking_tree_done_in_form" model="ir.actions.act_window.view">
+            <field name="sequence">2</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="stock.view_picking_form"/>
+            <field name="act_window_id" ref="aos_base_stock.action_picking_tree_done_in"/>
+        </record>
+
+        <record id="action_picking_tree_ready_in" model="ir.actions.act_window">
+            <field name="name">To Do</field>
+            <field name="res_model">stock.picking</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,kanban,form,calendar</field>
+            <field name="domain">[('picking_type_code','=','incoming')]</field>
+            <field name="context">{
+                    'search_default_picking_type_id': [active_id],
+                    'default_picking_type_id': active_id,
+                    'contact_display': 'partner_address',
+                    'search_default_available': 1,
+            }
+            </field>
+            <field name="search_view_id" ref="stock.view_picking_internal_search"/>
+             <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click here to create a new transfer.
+              </p><p>
+                You can either do it immediately or mark it as Todo for future processing. Use your scanner to validate the transferred quantity quicker.
+              </p>
+            </field>
+       </record>
+       
+       
+        <record id="action_picking_tree_ready_in_tree" model="ir.actions.act_window.view">
+            <field name="sequence">1</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="aos_base_stock.in_vpicktree"/>
+            <field name="act_window_id" ref="aos_base_stock.action_picking_tree_ready_in"/>
+        </record>
+
+        <record id="action_picking_tree_ready_in_form" model="ir.actions.act_window.view">
+            <field name="sequence">2</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="stock.view_picking_form"/>
+            <field name="act_window_id" ref="aos_base_stock.action_picking_tree_ready_in"/>
+        </record>
+
+        <record id="action_picking_tree_done_grouped_in" model="ir.actions.act_window">
+            <field name="name">Done Transfers by Date</field>
+            <field name="res_model">stock.picking</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,kanban,form,calendar</field>
+            <field name="domain">[('picking_type_code','=','incoming')]</field>
+            <field name="context">{
+                    'search_default_picking_type_id': [active_id],
+                    'default_picking_type_id': active_id,
+                    'contact_display': 'partner_address',
+                    'search_default_done': 1,
+                    'group_by': ['date'],
+            }
+            </field>
+            <field name="search_view_id" ref="stock.view_picking_internal_search"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click here to create a new transfer.
+              </p><p>
+                You can either do it immediately or mark it as Todo for future processing. Use your scanner to validate the transferred quantity quicker.
+              </p>
+            </field>
+        </record>
+       
+        <record id="action_picking_tree_done_grouped_in_tree" model="ir.actions.act_window.view">
+            <field name="sequence">1</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="aos_base_stock.in_vpicktree"/>
+            <field name="act_window_id" ref="aos_base_stock.action_picking_tree_done_grouped_in"/>
+        </record>
+
+        <record id="action_picking_tree_done_grouped_in_form" model="ir.actions.act_window.view">
+            <field name="sequence">2</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="stock.view_picking_form"/>
+            <field name="act_window_id" ref="aos_base_stock.action_picking_tree_done_grouped_in"/>
+        </record>
+
+        <record id="action_picking_tree_waiting_in" model="ir.actions.act_window">
+            <field name="name">Waiting Transfers</field>
+            <field name="res_model">stock.picking</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,kanban,form,calendar</field>
+            <field name="domain">[('picking_type_code','=','incoming')]</field>
+            <field name="context">{
+                    'search_default_picking_type_id': [active_id],
+                    'default_picking_type_id': active_id,
+                    'contact_display': 'partner_address',
+                    'search_default_waiting': 1,
+            }
+            </field>
+            <field name="search_view_id" ref="stock.view_picking_internal_search"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click here to create a new transfer.
+              </p><p>
+                You can either do it immediately or mark it as Todo for future processing. Use your scanner to validate the transferred quantity quicker.
+              </p>
+            </field>
+        </record>
+        
+        <record id="action_picking_tree_waiting_in_tree" model="ir.actions.act_window.view">
+            <field name="sequence">1</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="aos_base_stock.in_vpicktree"/>
+            <field name="act_window_id" ref="aos_base_stock.action_picking_tree_waiting_in"/>
+        </record>
+
+        <record id="action_picking_tree_waiting_in_form" model="ir.actions.act_window.view">
+            <field name="sequence">2</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="stock.view_picking_form"/>
+            <field name="act_window_id" ref="aos_base_stock.action_picking_tree_waiting_in"/>
+        </record>
+
+        <record id="action_picking_tree_late_in" model="ir.actions.act_window">
+            <field name="name">Late Transfers</field>
+            <field name="res_model">stock.picking</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,kanban,form,calendar</field>
+            <field name="domain">[('picking_type_code','=','incoming')]</field>
+            <field name="context">{
+                    'search_default_picking_type_id': [active_id],
+                    'default_picking_type_id': active_id,
+                    'contact_display': 'partner_address',
+                    'search_default_late': 1,
+                    'search_default_confirmed': 1,
+            }
+            </field>
+            <field name="search_view_id" ref="stock.view_picking_internal_search"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click here to create a new transfer.
+              </p><p>
+                You can either do it immediately or mark it as Todo for future processing. Use your scanner to validate the transferred quantity quicker.
+              </p>
+            </field>
+        </record>
+        
+        <record id="action_picking_tree_late_in_tree" model="ir.actions.act_window.view">
+            <field name="sequence">1</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="aos_base_stock.in_vpicktree"/>
+            <field name="act_window_id" ref="aos_base_stock.action_picking_tree_late_in"/>
+        </record>
+
+        <record id="action_picking_tree_late_in_form" model="ir.actions.act_window.view">
+            <field name="sequence">2</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="stock.view_picking_form"/>
+            <field name="act_window_id" ref="aos_base_stock.action_picking_tree_late_in"/>
+        </record>
+
+        <record id="action_picking_tree_backorder_in" model="ir.actions.act_window">
+            <field name="name">Backorders</field>
+            <field name="res_model">stock.picking</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,kanban,form,calendar</field>
+            <field name="domain">[('picking_type_code','=','incoming')]</field>
+            <field name="context">{
+                    'search_default_picking_type_id': [active_id],
+                    'default_picking_type_id': active_id,
+                    'contact_display': 'partner_address',
+                    'search_default_backorder': 1,
+                    'search_default_confirmed': 1,
+            }
+            </field>
+            <field name="search_view_id" ref="stock.view_picking_internal_search"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click here to create a new transfer.
+              </p><p>
+                You can either do it immediately or mark it as Todo for future processing. Use your scanner to validate the transferred quantity quicker.
+              </p>
+            </field>
+        </record>
+        
+        <record id="action_picking_tree_backorder_in_tree" model="ir.actions.act_window.view">
+            <field name="sequence">1</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="aos_base_stock.in_vpicktree"/>
+            <field name="act_window_id" ref="aos_base_stock.action_picking_tree_backorder_in"/>
+        </record>
+
+        <record id="action_picking_tree_backorder_in_form" model="ir.actions.act_window.view">
+            <field name="sequence">2</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="stock.view_picking_form"/>
+            <field name="act_window_id" ref="aos_base_stock.action_picking_tree_backorder_in"/>
+        </record>
+        
+        <!-- OUTGOING -->
+        
+        <record id="stock_picking_action_picking_type_out_tree" model="ir.actions.act_window.view">
+            <field name="sequence">1</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="aos_base_stock.out_vpicktree"/>
+            <field name="act_window_id" ref="aos_base_stock.stock_picking_action_picking_type_out"/>
+        </record>
+
+        <record id="stock_picking_action_picking_type_out_form" model="ir.actions.act_window.view">
+            <field name="sequence">2</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="stock.view_picking_form"/>
+            <field name="act_window_id" ref="aos_base_stock.stock_picking_action_picking_type_out"/>
+        </record>
+        
+		<record id="action_picking_tree_done_out" model="ir.actions.act_window">
+            <field name="name">Done Transfers</field>
+            <field name="res_model">stock.picking</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,kanban,form,calendar</field>
+            <field name="domain">[('picking_type_code','=','outgoing')]</field>
+            <field name="context">{
+                    'search_default_picking_type_id': [active_id],
+                    'default_picking_type_id': active_id,
+                    'contact_display': 'partner_address',
+                    'search_default_done': 1,
+            }
+            </field>
+            <field name="search_view_id" ref="stock.view_picking_internal_search"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click here to create a new transfer.
+              </p><p>
+                You can either do it immediately or mark it as Todo for future processing. Use your scanner to validate the transferred quantity quicker.
+              </p>
+            </field>
+        </record>
+        
+        <record id="action_picking_tree_done_out_tree" model="ir.actions.act_window.view">
+            <field name="sequence">1</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="aos_base_stock.out_vpicktree"/>
+            <field name="act_window_id" ref="aos_base_stock.action_picking_tree_done_out"/>
+        </record>
+
+        <record id="action_picking_tree_done_out_form" model="ir.actions.act_window.view">
+            <field name="sequence">2</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="stock.view_picking_form"/>
+            <field name="act_window_id" ref="aos_base_stock.action_picking_tree_done_out"/>
+        </record>
+
+        <record id="action_picking_tree_ready_out" model="ir.actions.act_window">
+            <field name="name">To Do</field>
+            <field name="res_model">stock.picking</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,kanban,form,calendar</field>
+            <field name="domain">[('picking_type_code','=','outgoing')]</field>
+            <field name="context">{
+                    'search_default_picking_type_id': [active_id],
+                    'default_picking_type_id': active_id,
+                    'contact_display': 'partner_address',
+                    'search_default_available': 1,
+            }
+            </field>
+            <field name="search_view_id" ref="stock.view_picking_internal_search"/>
+             <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click here to create a new transfer.
+              </p><p>
+                You can either do it immediately or mark it as Todo for future processing. Use your scanner to validate the transferred quantity quicker.
+              </p>
+            </field>
+       </record>
+       
+       
+        <record id="action_picking_tree_ready_out_tree" model="ir.actions.act_window.view">
+            <field name="sequence">1</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="aos_base_stock.out_vpicktree"/>
+            <field name="act_window_id" ref="aos_base_stock.action_picking_tree_ready_out"/>
+        </record>
+
+        <record id="action_picking_tree_ready_out_form" model="ir.actions.act_window.view">
+            <field name="sequence">2</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="stock.view_picking_form"/>
+            <field name="act_window_id" ref="aos_base_stock.action_picking_tree_ready_out"/>
+        </record>
+
+        <record id="action_picking_tree_done_grouped_out" model="ir.actions.act_window">
+            <field name="name">Done Transfers by Date</field>
+            <field name="res_model">stock.picking</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,kanban,form,calendar</field>
+            <field name="domain">[('picking_type_code','=','outgoing')]</field>
+            <field name="context">{
+                    'search_default_picking_type_id': [active_id],
+                    'default_picking_type_id': active_id,
+                    'contact_display': 'partner_address',
+                    'search_default_done': 1,
+                    'group_by': ['date'],
+            }
+            </field>
+            <field name="search_view_id" ref="stock.view_picking_internal_search"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click here to create a new transfer.
+              </p><p>
+                You can either do it immediately or mark it as Todo for future processing. Use your scanner to validate the transferred quantity quicker.
+              </p>
+            </field>
+        </record>
+       
+        <record id="action_picking_tree_done_grouped_out_tree" model="ir.actions.act_window.view">
+            <field name="sequence">1</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="aos_base_stock.out_vpicktree"/>
+            <field name="act_window_id" ref="aos_base_stock.action_picking_tree_done_grouped_out"/>
+        </record>
+
+        <record id="action_picking_tree_done_grouped_out_form" model="ir.actions.act_window.view">
+            <field name="sequence">2</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="stock.view_picking_form"/>
+            <field name="act_window_id" ref="aos_base_stock.action_picking_tree_done_grouped_out"/>
+        </record>
+
+        <record id="action_picking_tree_waiting_out" model="ir.actions.act_window">
+            <field name="name">Waiting Transfers</field>
+            <field name="res_model">stock.picking</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,kanban,form,calendar</field>
+            <field name="domain">[('picking_type_code','=','outgoing')]</field>
+            <field name="context">{
+                    'search_default_picking_type_id': [active_id],
+                    'default_picking_type_id': active_id,
+                    'contact_display': 'partner_address',
+                    'search_default_waiting': 1,
+            }
+            </field>
+            <field name="search_view_id" ref="stock.view_picking_internal_search"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click here to create a new transfer.
+              </p><p>
+                You can either do it immediately or mark it as Todo for future processing. Use your scanner to validate the transferred quantity quicker.
+              </p>
+            </field>
+        </record>
+        
+        <record id="action_picking_tree_waiting_out_tree" model="ir.actions.act_window.view">
+            <field name="sequence">1</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="aos_base_stock.out_vpicktree"/>
+            <field name="act_window_id" ref="aos_base_stock.action_picking_tree_waiting_out"/>
+        </record>
+
+        <record id="action_picking_tree_waiting_out_form" model="ir.actions.act_window.view">
+            <field name="sequence">2</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="stock.view_picking_form"/>
+            <field name="act_window_id" ref="aos_base_stock.action_picking_tree_waiting_out"/>
+        </record>
+
+        <record id="action_picking_tree_late_out" model="ir.actions.act_window">
+            <field name="name">Late Transfers</field>
+            <field name="res_model">stock.picking</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,kanban,form,calendar</field>
+            <field name="domain">[('picking_type_code','=','outgoing')]</field>
+            <field name="context">{
+                    'search_default_picking_type_id': [active_id],
+                    'default_picking_type_id': active_id,
+                    'contact_display': 'partner_address',
+                    'search_default_late': 1,
+                    'search_default_confirmed': 1,
+            }
+            </field>
+            <field name="search_view_id" ref="stock.view_picking_internal_search"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click here to create a new transfer.
+              </p><p>
+                You can either do it immediately or mark it as Todo for future processing. Use your scanner to validate the transferred quantity quicker.
+              </p>
+            </field>
+        </record>
+        
+        <record id="action_picking_tree_late_out_tree" model="ir.actions.act_window.view">
+            <field name="sequence">1</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="aos_base_stock.out_vpicktree"/>
+            <field name="act_window_id" ref="aos_base_stock.action_picking_tree_late_out"/>
+        </record>
+
+        <record id="action_picking_tree_late_out_form" model="ir.actions.act_window.view">
+            <field name="sequence">2</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="stock.view_picking_form"/>
+            <field name="act_window_id" ref="aos_base_stock.action_picking_tree_late_out"/>
+        </record>
+
+        <record id="action_picking_tree_backorder_out" model="ir.actions.act_window">
+            <field name="name">Backorders</field>
+            <field name="res_model">stock.picking</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,kanban,form,calendar</field>
+            <field name="domain">[('picking_type_code','=','outgoing')]</field>
+            <field name="context">{
+                    'search_default_picking_type_id': [active_id],
+                    'default_picking_type_id': active_id,
+                    'contact_display': 'partner_address',
+                    'search_default_backorder': 1,
+                    'search_default_confirmed': 1,
+            }
+            </field>
+            <field name="search_view_id" ref="stock.view_picking_internal_search"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click here to create a new transfer.
+              </p><p>
+                You can either do it immediately or mark it as Todo for future processing. Use your scanner to validate the transferred quantity quicker.
+              </p>
+            </field>
+        </record>
+        
+        <record id="action_picking_tree_backorder_out_tree" model="ir.actions.act_window.view">
+            <field name="sequence">1</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="aos_base_stock.out_vpicktree"/>
+            <field name="act_window_id" ref="aos_base_stock.action_picking_tree_backorder_out"/>
+        </record>
+
+        <record id="action_picking_tree_backorder_out_form" model="ir.actions.act_window.view">
+            <field name="sequence">2</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="stock.view_picking_form"/>
+            <field name="act_window_id" ref="aos_base_stock.action_picking_tree_backorder_out"/>
+        </record>
+        
+	</data>
+</odoo>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+		<record id="filter_user_stock_warehouse_allowed" model="ir.rule">
+            <field name="name">Filter Stock Warehouse Type User Allowed</field>
+            <field name="model_id" search="[('model','=','stock.warehouse')]" model="ir.model"/>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="domain_force">[('id','in', [p.id for p in user.warehouse_ids])]</field>
+        </record>
+	</data>
+
+</odoo>

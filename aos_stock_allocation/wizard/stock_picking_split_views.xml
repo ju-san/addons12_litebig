@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <act_window name="Split Allocation" id="act_stock_picking_split_allocation"
+        res_model="stock.split.picking"
+        view_mode="form" target="new"/>
+
+    <record id="view_stock_split_picking_form" model="ir.ui.view">
+        <field name="name">Split lines</field>
+        <field name="model">stock.split.picking</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="move_dest_exists" invisible="1"/>
+                <group attrs="{'invisible': [('move_dest_exists', '=', False)]}">
+                    <div class="oe_grey">
+                        <p>This picking appears to be chained with another operation. Later, if you receive the goods you are returning now, make sure to <b>reverse</b> the returned picking in order to avoid logistic rules to be applied again (which would create duplicated operations)</p>
+                    </div>
+                </group>
+                <group>
+                    <field name="product_split_moves" nolabel="1">
+                        <tree editable="top" create="0">
+                            <field name="product_id"  options="{'no_create': True, 'no_open': True}" force_save="1"/>
+                            <field name="quantity"/>
+                            <!-- <field name="location_dest_id"/> -->
+                            <field name="uom_id" readonly="1" groups="uom.group_uom"/>
+                        </tree>
+                    </field>
+                </group>
+                <group>
+                    <field name="parent_location_id" invisible="1"/>
+                    <field name="original_location_id" invisible="1"/>
+                    <field name="picking_id" invisible="1"/>
+                    <!-- <field name="picking_type_id" options="{'no_create': True, 'no_open': True}"/> -->
+                    <field name="location_id" options="{'no_create': True, 'no_open': True}" groups="stock.group_stock_multi_locations" required="1"/>
+                </group>
+                <footer>
+                    <button name="create_splits" string="Split Allocation" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>		
+            
+		<report menu="False" id="aos_new_purchase" model="purchase.order" name="aos.new.purchase"   
+			file="aos_purchase/report/aos_print_purchase.mako" string="Purchase Order" webkit_header="aos_purchase_without_header_footer"  
+			report_type="webkit"/>
+			   
+		<report menu="False" id="aos_new_rfq" model="purchase.order" name="aos.new.rfq"   
+			file="aos_purchase/report/aos_print_rfq.mako" string="Request for Quotation" webkit_header="aos_purchase_without_header_footer"  
+			report_type="webkit"/>  
+		<!-- Invisible Base Report -->
+		<report menu="False"
+            string="Purchase Order" 
+            id="purchase.action_report_purchase_order" 
+            model="purchase.order" 
+            report_type="qweb-pdf"
+            name="purchase.report_purchaseorder" 
+            file="purchase.report_purchaseorder" 
+        />
+
+        <report menu="False"
+            string="Request for Quotation" 
+            id="purchase.report_purchase_quotation" 
+            model="purchase.order" 
+            report_type="qweb-pdf"
+            name="purchase.report_purchasequotation" 
+            file="purchase.report_purchasequotation"
+        />
+        
+	</data>
+</openerp>

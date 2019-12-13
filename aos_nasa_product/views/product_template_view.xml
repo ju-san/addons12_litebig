@@ -1,0 +1,311 @@
+<?xml version="1.0"?>
+<odoo>
+	<data>
+	
+        <!-- <record id="product_category_code_form" model="ir.ui.view">
+            <field name="name">product.category.code.form</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="product.product_category_form_view"/>
+            <field name="arch" type="xml">
+                <group name="first" position="after">
+                	<group name="scnd" col="4" colspan="4">
+                        <field name="category_code" class="oe_inline"/>
+                        <field name="hs_code_category" class="oe_inline"/>
+                    </group>
+                </group>
+            </field>
+        </record> -->
+            
+		<!-- <record id="product_template_tree_view_aos_product" model="ir.ui.view">
+	        <field name="name">product.template.product.tree.aos</field>
+	        <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_tree_view"/>
+            <field name="arch" type="xml">
+                <field name="standard_price" position="attributes">
+                    <attribute name="groups">aos_product.group_product_cost_price</attribute>
+                </field>
+            </field>
+        </record> -->
+        
+        <!-- <record id="product_template_form_view_is_global" model="ir.ui.view">
+	        <field name="name">product.template.global.form</field>
+	        <field name="model">product.template</field>
+		    <field name="inherit_id" ref="product.product_template_form_view"/>
+		    <field name="arch" type="xml">
+		    	<div name="options" position="inside">
+		    		<div groups="base.group_no_one">
+                        <field name="global_ok"/>
+                        <label for="global_ok"/>
+                    </div>
+		    	</div>
+		    </field>
+		</record> -->
+        
+		<record id="product_template_form_view_aos_nasa_product" model="ir.ui.view">
+	        <field name="name">product.template.common.form.aos</field>
+	        <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">            	
+		    	<div name="options" position="inside">
+		    		<div>
+                        <field name="poin_ok"/>
+                        <label for="poin_ok"/>
+                    </div>
+		    		<div>
+                        <field name="indent_ok"/>
+                        <label for="indent_ok"/>
+                    </div>
+		    	</div>
+		    	<!-- <field name="company_id" position="attributes">
+		    		<attribute name="attrs">{'required': [('global_ok','=',False)]}</attribute>
+		    	</field> -->
+                <!-- <header position="inside">
+					<button name="confirm_product_template" states="draft" string="Confirm" class="oe_highlight" type="object" groups="aos_product.group_product_manager"/>
+					<button name="draft_product_template" states="confirmed"  string="Set to Draft" type="object" groups="aos_product.group_product_manager"/>
+					<field name="state" widget="statusbar" statusbar_visible="draft,confirmed" statusbar_colors='{"confirmed":"blue"}' readonly="1"/>
+                </header>  -->
+            	<!-- <div name="options" position="inside">
+                    <div groups="aos_product.group_product_sale_price_change">
+                        <field name="price_change_ok"/>
+                        <label for="price_change_ok"/>
+                    </div>
+                </div> -->
+                <!-- <xpath expr="//group[@name='group_general']/field[@name='categ_id']" position="attributes">
+                	<attribute name="string">Internal Category</attribute>
+                </xpath> -->
+                <!-- <xpath expr="//group[@name='group_general']/field[@name='categ_id']" position="after">
+                	<field name="hs_categ_id" options="{'no_create': True}"/>
+                </xpath> -->
+                <!-- <field name="type" position="after">
+                    <field name="product_type_id" groups="aos_product.group_product_additional_info"/>
+                </field>-->
+                <xpath expr="//field[@name='categ_id']" position="after">
+                	<field name="state_id"/>
+                	<field name="status_izin"/>
+                </xpath>
+            	<!-- 
+            	<group name="sale" position="before">
+            		<group name="buyer">
+                    	<field name="buyer_ids" nolabel="1" context="{'default_product_tmpl_id': context.get('product_tmpl_id', active_id)}">
+                    		<tree string="Partner" editable="bottom">
+                    			<field name="sequence" widget="handle"/>
+                    			<field name="partner_id"/>
+                    			<field name="product_code"/>
+                    		</tree>
+                    	</field>     
+                	</group>
+                </group>
+                <xpath expr="//group['group_standard_price']/field[@name='uom_po_id']" position="after">
+                    <field name="tags_ids" widget="many2many_tags"/>
+                </xpath> -->
+            	<label for="standard_price" position="attributes">
+            		<attribute name="groups">aos_base_product.group_product_cost_price</attribute>
+            	</label>
+                <div name="standard_price_uom" position="attributes">
+                    <attribute name="groups">aos_base_product.group_product_cost_price</attribute>
+                </div>
+   			     <xpath expr="//field[@name='list_price']" position="after">
+            		<field name="poin_value" attrs="{'required': [('poin_ok','=',True)]}"/>
+            		<field name="bisnis_poin" attrs="{'required': [('poin_ok','=',True)]}"/>       
+            		<field name="tgl_produksi"/> 
+            		<field name="batch_prod"/>         		
+        		 </xpath>
+                <xpath expr="//page[@name='general_information']/group/group[@name='group_general']/field[@name='categ_id']" position="attributes">
+                	<attribute name="options">{'no_create': True, 'no_open': True}</attribute>
+                </xpath>
+                <xpath expr="//page[@name='general_information']/group/group[@name='group_standard_price']/field[@name='uom_id']" position="attributes">
+                	<attribute name="string">Satuan</attribute>
+                	<attribute name="options">{'no_create': True, 'no_open': True}</attribute>
+                </xpath>
+                <xpath expr="//page[@name='general_information']/group/group[@name='group_standard_price']/field[@name='uom_po_id']" position="attributes">
+                	<attribute name="string">Satuan Pembelian</attribute>
+                	<attribute name="options">{'no_create': True, 'no_open': True}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='company_id']" position="attributes">
+            		<attribute name="groups">aos_base_product.group_product_creation</attribute>
+        		</xpath>		     		
+   			     <xpath expr="//field[@name='sale_ok']" position="attributes">
+            		<attribute name="groups">aos_base_product.group_product_creation</attribute>
+        		</xpath>		     		
+   			     <xpath expr="//field[@name='purchase_ok']" position="attributes">
+            		<attribute name="groups">aos_base_product.group_product_creation</attribute>
+        		</xpath>		     		
+   			     <xpath expr="//label[@for='sale_ok']" position="attributes">
+            		<attribute name="groups">aos_base_product.group_product_creation</attribute>
+        		</xpath>		     		
+   			     <xpath expr="//label[@for='purchase_ok']" position="attributes">
+            		<attribute name="groups">aos_base_product.group_product_creation</attribute>
+        		</xpath>		     		
+   			     <xpath expr="//field[@name='categ_id']" position="attributes">
+            		<attribute name="groups">aos_base_product.group_product_creation</attribute>
+        		</xpath>
+        		<!-- <xpath expr="//page[@name='inventory']" position="inside">
+        			<group name="dimension" string="Dimension" colspan="4">
+	                    <field name="packaging_supp_quest" groups="aos_product.group_product_additional_info"/>
+	                    <field name="package_uom"  attrs="{'invisible': [('packaging_supp_quest', 'not in', 'yes')]}"  groups="aos_product.group_product_additional_info"/>
+		                <field name="product_package_po" attrs="{'invisible': [('packaging_supp_quest', 'not in', 'yes')],'required': [('packaging_supp_quest', 'in', 'yes')]}" placeholder="Contain 100 pcs" groups="aos_product.group_product_additional_info"/>
+		                <field name="packaging_weight" attrs="{'invisible': [('packaging_supp_quest', 'not in', 'yes')],'required': [('packaging_supp_quest', 'in', 'yes')]}" placeholder="Weight 10 kg" groups="aos_product.group_product_additional_info"/> 
+				        <label string="Dimension LxWxH (cm)" attrs="{'invisible': [('packaging_supp_quest', 'not in', 'yes')]}" groups="aos_product.group_product_additional_info"/>
+		                <div class="oe_tags" groups="aos_product.group_product_additional_info">
+	                		<field name="length_dimension" placeholder="30" style="width: 20%%"  attrs="{'invisible': [('packaging_supp_quest', 'not in', 'yes')],'required': [('packaging_supp_quest', 'in', 'yes')]}" />
+	                		<field name="separator_x" placeholder="x" style="width: 5%%" readonly="1" attrs="{'invisible': [('packaging_supp_quest', 'not in', 'yes')]}"  />
+	                        <field name="width_dimension" placeholder="30" style="width: 20%%"  attrs="{'invisible': [('packaging_supp_quest', 'not in', 'yes')],'required': [('packaging_supp_quest', 'in', 'yes')]}"  />
+	                		<field name="separator_x2" placeholder="x" style="width: 5%%" readonly="1" attrs="{'invisible': [('packaging_supp_quest', 'not in', 'yes')]}"  />
+	                        <field name="height_dimension" placeholder="30" style="width: 20%%" attrs="{'invisible': [('packaging_supp_quest', 'not in', 'yes')],'required': [('packaging_supp_quest', 'in', 'yes')]}" />
+	                    </div>
+				        <field name="size" attrs="{'invisible': [('packaging_supp_quest', 'not in', ('yes','no'))]}" groups="aos_product.group_product_additional_info"/>
+			        </group>
+                </xpath> -->
+            </field>
+        </record>
+        
+        <record id="product_template_only_info_form" model="ir.ui.view">
+            <field name="name">product.template.view.form.easy.aos</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_only_form_view"/>
+            <field name="arch" type="xml">		     		
+   			     <xpath expr="//field[@name='default_code']" position="attributes">
+            		<attribute name="groups">aos_base_product.group_product_creation</attribute>
+        		</xpath>
+        		<!-- <field name="attribute_line_ids" position="before">
+        			<label for="unique_variant"/>
+                    <div>
+                        <field name="unique_variant"/>
+                    </div>
+        		</field> -->
+        		<!-- <xpath expr="//group[@name='group_lots_and_weight']" position="inside">
+                    <field name="packaging_supp_quest" groups="aos_product.group_product_additional_info"/>
+                    <field name="package_uom"  attrs="{'invisible': [('packaging_supp_quest', 'not in', 'yes')]}"  groups="aos_product.group_product_additional_info"/>
+	                <field name="product_package_po" attrs="{'invisible': [('packaging_supp_quest', 'not in', 'yes')],'required': [('packaging_supp_quest', 'in', 'yes')]}" placeholder="Contain 100 pcs" groups="aos_product.group_product_additional_info"/>
+	                <field name="packaging_weight" attrs="{'invisible': [('packaging_supp_quest', 'not in', 'yes')],'required': [('packaging_supp_quest', 'in', 'yes')]}" placeholder="Weight 10 kg" groups="aos_product.group_product_additional_info"/> 
+			        <label string="Dimension LxWxH (cm)" attrs="{'invisible': [('packaging_supp_quest', 'not in', 'yes')]}" groups="aos_product.group_product_additional_info"/>
+	                <div class="oe_tags" groups="aos_product.group_product_additional_info">
+                		<field name="length_dimension" placeholder="30" style="width: 20%%"  attrs="{'invisible': [('packaging_supp_quest', 'not in', 'yes')],'required': [('packaging_supp_quest', 'in', 'yes')]}" />
+                		<field name="separator_x" placeholder="x" style="width: 5%%" readonly="1" attrs="{'invisible': [('packaging_supp_quest', 'not in', 'yes')]}"  />
+                        <field name="width_dimension" placeholder="30" style="width: 20%%"  attrs="{'invisible': [('packaging_supp_quest', 'not in', 'yes')],'required': [('packaging_supp_quest', 'in', 'yes')]}"  />
+                		<field name="separator_x2" placeholder="x" style="width: 5%%" readonly="1" attrs="{'invisible': [('packaging_supp_quest', 'not in', 'yes')]}"  />
+                        <field name="height_dimension" placeholder="30" style="width: 20%%" attrs="{'invisible': [('packaging_supp_quest', 'not in', 'yes')],'required': [('packaging_supp_quest', 'in', 'yes')]}" />
+                    </div>
+			        <field name="size" attrs="{'invisible': [('packaging_supp_quest', 'not in', ('yes','no'))]}" groups="aos_product.group_product_additional_info"/>
+                </xpath> -->
+            </field>
+        </record>
+        
+        
+        <!-- <record id="product_template_form_view_aos_base_product_validator" model="ir.ui.view">
+	        <field name="name">product.template.common.form.aos</field>
+	        <field name="model">product.template</field>
+            <field name="inherit_id" ref="aos_base_product.product_template_form_view_aos_base_product"/>
+            <field name="arch" type="xml">
+            	<button name="confirm_product_template" position="attributes">
+            		<attribute name="groups">aos_base_product.group_product_manager</attribute>
+            	</button>           	
+            	<button name="draft_product_template" position="attributes">
+            		<attribute name="groups">aos_base_product.group_product_manager</attribute>
+            	</button>     
+            </field>
+        </record> -->
+        
+        <!-- <record id="view_template_property_form_info" model="ir.ui.view">
+            <field name="name">product.product.form.property.info</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="stock.view_template_property_form"/>
+            <field name="arch" type="xml">		     		
+   			     <xpath expr="//div[@name='volume']" position="after">
+            		<field name="packaging_supp_quest" groups="aos_product.group_product_additional_info"/>
+                    <field name="package_uom"  attrs="{'invisible': [('packaging_supp_quest', 'not in', 'yes')]}"  groups="aos_product.group_product_additional_info"/>
+	                <field name="product_package_po" attrs="{'invisible': [('packaging_supp_quest', 'not in', 'yes')],'required': [('packaging_supp_quest', 'in', 'yes')]}" placeholder="Contain 100 pcs" groups="aos_product.group_product_additional_info"/>
+	                <field name="packaging_weight" attrs="{'invisible': [('packaging_supp_quest', 'not in', 'yes')],'required': [('packaging_supp_quest', 'in', 'yes')]}" placeholder="Weight 10 kg" groups="aos_product.group_product_additional_info"/> 
+			        <label string="Dimension LxWxH (cm)" attrs="{'invisible': [('packaging_supp_quest', 'not in', 'yes')]}" groups="aos_product.group_product_additional_info"/>
+	                <div class="oe_tags" groups="aos_product.group_product_additional_info">
+                		<field name="length_dimension" placeholder="30" style="width: 20%%"  attrs="{'invisible': [('packaging_supp_quest', 'not in', 'yes')],'required': [('packaging_supp_quest', 'in', 'yes')]}" />
+                		<field name="separator_x" placeholder="x" style="width: 5%%" readonly="1" attrs="{'invisible': [('packaging_supp_quest', 'not in', 'yes')]}"  />
+                        <field name="width_dimension" placeholder="30" style="width: 20%%"  attrs="{'invisible': [('packaging_supp_quest', 'not in', 'yes')],'required': [('packaging_supp_quest', 'in', 'yes')]}"  />
+                		<field name="separator_x2" placeholder="x" style="width: 5%%" readonly="1" attrs="{'invisible': [('packaging_supp_quest', 'not in', 'yes')]}"  />
+                        <field name="height_dimension" placeholder="30" style="width: 20%%" attrs="{'invisible': [('packaging_supp_quest', 'not in', 'yes')],'required': [('packaging_supp_quest', 'in', 'yes')]}" />
+                    </div>
+			        <field name="size" attrs="{'invisible': [('packaging_supp_quest', 'not in', ('yes','no'))]}" groups="aos_product.group_product_additional_info"/>
+        		</xpath>
+            </field>
+        </record> -->
+        
+	    <!-- <record id="product_variant_brand_form" model="ir.ui.view">
+            <field name="name">product.variant.brand.form</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_variant_easy_edit_view"/>
+            <field name="arch" type="xml">
+                    <header position="inside">
+						<button name="confirm_product" string="Confirm" class="oe_highlight"  type="object" states="draft" groups="mi_material_code.res_groups_control_purchase"  />
+	                     <field name="state" widget="statusbar" statusbar_visible="draft,confirmed" statusbar_colors='{"confirmed":"blue"}' readonly="1"/>
+                    </header>
+                <xpath expr="//field[@name='lst_price']" position="after">
+                	<field name="packaging_supp_quest" />
+                    <field name="package_uom"  attrs="{'invisible': [('packaging_supp_quest', 'not in', 'yes')]}"  />
+	                <field name="product_package_po" attrs="{'invisible': [('packaging_supp_quest', 'not in', 'yes')],'required': [('packaging_supp_quest', 'in', 'yes')]}" placeholder="Contain 100 pcs" />
+	                <field name="packaging_weight" attrs="{'invisible': [('packaging_supp_quest', 'not in', 'yes')],'required': [('packaging_supp_quest', 'in', 'yes')]}" placeholder="Weight 10 kg" /> 
+			        <field name="weight_unit" attrs="{'invisible': [('packaging_supp_quest', 'not in', ('yes','no'))]}" />
+	                <label string="Dimension LxWxH (cm)" attrs="{'invisible': [('packaging_supp_quest', 'not in', 'yes')]}" />
+	                <div class="oe_tags">
+	                		<field name="length_dimension" placeholder="30" style="width: 20%%"  attrs="{'invisible': [('packaging_supp_quest', 'not in', 'yes')],'required': [('packaging_supp_quest', 'in', 'yes')]}" />
+	                		<field name="separator_x" placeholder="x" style="width: 5%%" readonly="1" attrs="{'invisible': [('packaging_supp_quest', 'not in', 'yes')]}"  />
+	                        <field name="width_dimension" placeholder="30" style="width: 20%%"  attrs="{'invisible': [('packaging_supp_quest', 'not in', 'yes')],'required': [('packaging_supp_quest', 'in', 'yes')]}"  />
+	                		<field name="separator_x2" placeholder="x" style="width: 5%%" readonly="1" attrs="{'invisible': [('packaging_supp_quest', 'not in', 'yes')]}"  />
+	                        <field name="height_dimension" placeholder="30" style="width: 20%%" attrs="{'invisible': [('packaging_supp_quest', 'not in', 'yes')],'required': [('packaging_supp_quest', 'in', 'yes')]}" />
+	                    </div>
+			        <field name="size_unit" attrs="{'invisible': [('packaging_supp_quest', 'not in', ('yes','no'))]}" />
+			        <field name="kubikasi_unit" attrs="{'invisible': [('packaging_supp_quest', 'not in', ('yes','no'))]}" />
+                </xpath>
+                <xpath expr="//field[@name='barcode']" position="after">
+                	<field name="product_sku" groups="mi_material_code.res_groups_control_purchase" />
+                	<field name="product_merk_id" invisible="1" />
+                	<field name="product_type_id" invisible="1" />
+                	<field name="product_serial_number" invisible="1" />
+                </xpath>
+   			     <xpath expr="//field[@name='standard_price']" position="attributes">
+            		<attribute name="groups">mi_material_code.res_groups_control_purchase</attribute>
+        		</xpath>		     		
+   			     <xpath expr="//field[@name='attribute_value_ids']" position="attributes">
+            		<attribute name="groups">mi_material_code.res_groups_control_purchase</attribute>
+        		</xpath>		     		
+   			     <xpath expr="//group[2]" position="attributes">
+            		<attribute name="groups">mi_material_code.res_groups_control_purchase</attribute>
+        		</xpath>		     		
+   			     <xpath expr="//group[@name='codes']" position="attributes">
+            		<attribute name="groups">mi_material_code.res_groups_control_purchase</attribute>
+        		</xpath>		     		
+   			     <xpath expr="//field[@name='barcode']" position="attributes">
+            		<attribute name="groups">mi_material_code.res_groups_control_purchase</attribute>
+        		</xpath>		     		
+   			     <xpath expr="//field[@name='default_code']" position="attributes">
+            		<attribute name="groups">mi_material_code.res_groups_control_purchase</attribute>
+        		</xpath>		     		
+   			     <xpath expr="//field[@name='active']" position="attributes">
+            		<attribute name="groups">mi_material_code.res_groups_control_purchase</attribute>
+        		</xpath>		     		
+   			     <xpath expr="//label[@for='volume']" position="attributes">
+            		<attribute name="invisible">1</attribute>
+        		</xpath>		     		
+   			     <xpath expr="//field[@name='volume']" position="attributes">
+            		<attribute name="invisible">1</attribute>
+        		</xpath>		     	     		
+   			     <xpath expr="//group[@name='weight']" position="attributes">
+            		<attribute name="invisible">1</attribute>
+        		</xpath>			
+   			     <xpath expr="//label[@for='weight']" position="attributes">
+            		<attribute name="invisible">1</attribute>
+        		</xpath>		     		
+   			     <xpath expr="//field[@name='weight']" position="attributes">
+            		<attribute name="invisible">1</attribute>
+            		<attribute name="attrs">{'invisible': [('packaging_supp_quest', 'not in', ('yes','no'))]}</attribute>
+        		</xpath>
+            </field>
+        </record> -->
+        
+        <record id="product.product_category_action_form" model="ir.actions.act_window">
+            <field name="name">Internal Categories</field>
+        </record>
+        
+    
+		
+	</data>
+</odoo>

@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<odoo>		
+
+	<!-- <record id="view_account_advance_payment_form_purchase" model="ir.ui.view">
+        <field name="name">account.payment.form.purchase</field>
+        <field name="model">account.payment</field>
+	    <field name="inherit_id" ref="account.view_account_payment_form"/>
+	    <field name="arch" type="xml">	
+	    	<field name="communication" position="after">
+	    		<field name="purchase_ids" widget="many2many_tags" options="{'no_create': True}" attrs="{'invisible': [('purchase_ids','=',False)]}"/>
+	    	</field>
+	    </field>
+	</record> -->
+		
+</odoo>

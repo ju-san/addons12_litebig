@@ -1,0 +1,187 @@
+<?xml version="1.0"?>
+<odoo>
+	<data>
+	
+		
+        <!-- <record id="view_warehouse_tree_inter" model="ir.ui.view">
+	        <field name="name">stock.warehouse.tree.inter</field>
+	        <field name="model">stock.warehouse</field>
+	        <field name="inherit_id" ref="stock.view_warehouse_tree"/>
+	        <field name="arch" type="xml">
+	            <field name="partner_id" position="after">
+	                <field name="branch_id" />
+	            </field>
+	        </field>
+	    </record> -->
+	
+	    <record id="view_warehouse_form_inter" model="ir.ui.view">
+	        <field name="name">view.warehouse.form.inter</field>
+	        <field name="model">stock.warehouse</field>
+	        <field name="inherit_id" ref="stock.view_warehouse"/>
+	        <field name="arch" type="xml">
+	            <field name="code" position="after">
+	                <field name="users_ids" widget="many2many_tags"/>
+	            </field>
+	        </field>
+	    </record>
+	
+	   <!-- <record id="view_location_form_form_inter" model="ir.ui.view">
+	        <field name="name">stock.location.form.inter</field>
+	        <field name="model">stock.location</field>
+	        <field name="inherit_id" ref="stock.view_location_form"/>
+	        <field name="arch" type="xml">
+	            <field name="usage" position="after">
+	                <field name="branch_id" options="{'no_create': True}" domain = "[('company_id','=', company_id)]"
+	                       groups="aos_base.group_multi_branch"/>
+	            </field>
+	        </field>
+	    </record>
+	    
+	    <record id="view_location_branch_inter_search" model="ir.ui.view">
+	        <field name="name">stock.location.inter.search</field>
+	        <field name="model">stock.location</field>
+	        <field name="inherit_id" ref="stock.view_location_search"/>
+	        <field name="arch" type="xml">
+	            <xpath expr="//field[@name='location_id']" position="after">
+	                <field name="branch_id" groups="aos_base.group_multi_branch"/>
+	            </xpath>
+	        </field>
+	    </record>
+	    
+	    <record id="vpicktree_inter_branch" model="ir.ui.view">
+	        <field name="name">stock.picking.tree</field>
+	        <field name="model">stock.picking</field>
+	        <field name="inherit_id" ref="stock.vpicktree"/>
+	        <field name="arch" type="xml">
+	            <field name="partner_id" position="after">
+	                <field name="city" invisible="1"/>
+	                <field name="state_id" invisible="1"/>
+	                <field name="country_id" invisible="1"/>
+	            </field>
+	            <field name="origin" position="after">
+	                <field name="branch_id" groups="aos_base.group_multi_branch"/>
+	            </field>
+	            <field name="scheduled_date" position="after">
+	            	<field name="date_done"/>
+	            </field>
+	        </field>
+	    </record>
+	
+	    <record id="view_picking_inter_branch_form" model="ir.ui.view">
+	        <field name="name">stock.picking.form</field>
+	        <field name="model">stock.picking</field>
+	        <field name="inherit_id" ref="stock.view_picking_form"/>
+	        <field name="arch" type="xml">
+	            <xpath expr="//field[@name='company_id']" position="after">
+	                <field name="branch_id" options="{'no_create': True}" domain = "[('company_id','=', company_id)]"
+	                       groups="aos_base.group_multi_branch"/>
+	            </xpath>
+	        </field>
+	    </record>
+	    
+	    <record id="view_pack_operation_bin_location" model="ir.ui.view">
+	        <field name="name">stock.pack.operation.bin.form</field>
+	        <field name="model">stock.pack.operation</field>
+	        <field name="inherit_id" ref="stock.view_pack_operation_details_form"/>
+	        <field name="arch" type="xml">
+	            <field name="location_dest_id" position="after">
+                    <field name="bin_id"/>
+                    <field name="qty_box"/>
+	            </field>
+	        </field>
+	    </record>
+	
+	    <record id="view_picking_branch_inter_search" model="ir.ui.view">
+	        <field name="name">stock.picking.inter.search</field>
+	        <field name="model">stock.picking</field>
+	        <field name="inherit_id" ref="stock.view_picking_internal_search"/>
+	        <field name="arch" type="xml">
+	            <field name="product_id" position="after">
+	                <field name="branch_id" groups="aos_base.group_multi_branch"/>
+	            </field>
+	            <xpath expr="//filter[@name='picking_type']" position="before">
+	                <filter string="Branch" domain="[]" context="{'group_by':'branch_id'}"
+	                        groups="aos_base.group_multi_branch"/>
+	            </xpath>
+	        </field>
+	    </record>
+	
+	    <record id="view_move_branch_inter_tree" model="ir.ui.view">
+	        <field name="name">stock.move.inter.tree</field>
+	        <field name="model">stock.move</field>
+	        <field name="inherit_id" ref="stock.view_move_tree"/>
+	        <field name="arch" type="xml">
+	            <xpath expr="//field[@name='location_id']" position="after">
+	                <field name="branch_id" groups="aos_base.group_multi_branch"/>
+	            </xpath>
+	            <xpath expr="//field[@name='location_dest_id']" position="after">
+	                <field name="branch_dest_id" groups="aos_base.group_multi_branch"/>
+	            </xpath>
+	        </field>
+	    </record>
+	
+	    <record id="view_move_branch_inter_picking_tree" model="ir.ui.view">
+	        <field name="name">stock.move.inter.tree</field>
+	        <field name="model">stock.move</field>
+	        <field name="inherit_id" ref="stock.view_move_picking_tree"/>
+	        <field name="arch" type="xml">
+	            <xpath expr="//field[@name='location_id']" position="after">
+	                <field name="branch_id" groups="aos_base.group_multi_branch"/>
+	            </xpath>
+	            <xpath expr="//field[@name='location_dest_id']" position="after">
+	                <field name="branch_dest_id" groups="aos_base.group_multi_branch"/>
+	            </xpath>
+	        </field>
+	    </record>
+	
+	    <record id="stock_move_inter_tree_aos" model="ir.ui.view">
+	        <field name="name">Stock Moves</field>
+	        <field name="model">stock.move</field>
+	        <field name="field_parent">move_history_ids</field>
+	        <field name="inherit_id" ref="stock.stock_move_tree"/>
+	        <field name="arch" type="xml">
+	            <xpath expr="//field[@name='location_id']" position="after">
+	                <field name="branch_id" groups="aos_base.group_multi_branch"/>
+	            </xpath>
+	            <xpath expr="//field[@name='location_dest_id']" position="after">
+	                <field name="branch_dest_id" groups="aos_base.group_multi_branch"/>
+	            </xpath>
+	        </field>
+	    </record>
+	
+	    <record id="view_move_inter_form" model="ir.ui.view">
+	        <field name="name">stock.move.inter.form</field>
+	        <field name="model">stock.move</field>
+	        <field name="inherit_id" ref="stock.view_move_form"/>
+	        <field name="arch" type="xml">
+	            <xpath expr="//field[@name='location_id']" position="after">
+	                <field name="branch_id" groups="aos_base.group_multi_branch"/>
+	            </xpath>
+	            <xpath expr="//field[@name='location_dest_id']" position="after">
+	                <field name="branch_dest_id" groups="aos_base.group_multi_branch"/>
+	            </xpath>
+	        </field>
+	    </record>
+	    
+	    <record id="view_stock_move_line_inter_operation_tree_sn" model="ir.ui.view">
+            <field name="name">stock.move.line.operations.inter.tree</field>
+            <field name="model">stock.move.line</field>
+	        <field name="inherit_id" ref="stock.view_stock_move_line_operation_tree"/>
+            <field name="arch" type="xml">
+            	<field name="location_id" position="replace"></field>
+            	<field name="location_dest_id" position="replace"></field>
+            	<field name="package_id" position="attributes">
+            		<attribute name="invisible">1</attribute>
+            	</field>
+            	<field name="result_package_id" position="attributes">
+            		<attribute name="invisible">1</attribute>
+            	</field>
+            	<field name="owner_id" position="after">
+            		<field name="location_id" attrs="{'readonly': [('in_entire_package', '=', True)]}" invisible="not context.get('show_source_location')" domain="[('id', 'child_of', parent.location_id)]" groups="stock.group_stock_multi_locations"/>
+                    <field name="location_dest_id" attrs="{'readonly': [('in_entire_package', '=', True)]}" invisible="not context.get('show_destination_location')" domain="[('id', 'child_of', parent.location_dest_id)]" groups="stock.group_stock_multi_locations"/>
+            	</field>
+            </field>
+        </record> -->
+	    
+	</data>
+</odoo>

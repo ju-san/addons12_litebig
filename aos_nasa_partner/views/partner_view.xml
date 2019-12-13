@@ -1,0 +1,418 @@
+<?xml version="1.0"?>
+<odoo>
+	<data>
+	
+	    <!-- <menuitem name="Contacts"
+	        id="header_menu_contacts"
+	        sequence="4"
+	        web_icon="contacts,static/description/icon.png"
+	        groups="base.group_user,base.group_partner_manager,aos_base.group_partner_customer_manager,aos_base.group_partner_vendor_manager,aos_base.group_partner_employee_manager"/> -->
+		
+		<record id="view_partner_supplier_tree" model="ir.ui.view">
+            <field name="name">res.partner.tree</field>
+            <field name="model">res.partner</field>
+            <field eval="8" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Contacts">
+					<field name="vendor_ref"/>
+                    <field name="display_name" string="Name"/>
+                    <field name="function" invisible="1"/>
+                    <field name="phone"/>
+                    <field name="email"/>
+                    <field name="user_id" invisible="1"/>
+                    <field name="is_company" invisible="1"/>
+                    <field name="country_id" invisible="1"/>
+                    <field name="parent_id" invisible="1"/>
+                    <field name="active" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+		
+		<record id="view_partner_tree_aos_partner_nasa" model="ir.ui.view">
+            <field name="name">res.partner.tree.aos_partner</field>
+            <field name="model">res.partner</field>
+			<field name="inherit_id" ref="base.view_partner_tree" />
+			<field name="arch" type="xml">	
+				<xpath expr="//field[@name='display_name']/.." position="attributes">
+                	<attribute name="colors">blue: state=='draft';</attribute>
+				</xpath>
+				<field name="display_name" position="before">
+					<field name="customer_ref"/>
+				</field>
+				<field name="parent_id" position="after">
+					<field name="state"/>
+				</field>
+			</field>
+		</record>
+		
+		<!-- <record id="efaktur_view_partner_inherit_form" model="ir.ui.view">
+            <field name="name">res.partner.form.inherit</field>
+            <field name="model">res.partner</field>
+			<field name="inherit_id" ref="efaktur.efaktur_view_partner_form" />
+			<field name="arch" type="xml">	
+				<xpath expr="//field[@name='npwp']" position="after">
+                	<button name="attachment_legal_view" context="{'legal_type': 'NPWP'}" type="object" class="fa fa-files-o oe_inline" help="Doc. NPWP"/>
+				</xpath>
+			</field>
+		</record> -->
+		
+        <!-- <record id="view_partner_property_form_vacc_nasa" model="ir.ui.view">
+            <field name="name">res.partner.view.form.property</field>
+            <field name="model">res.partner</field>
+			<field name="inherit_id" ref="account.view_partner_property_form" />
+			<field name="arch" type="xml">	
+				<xpath expr="//field[@name='bank_ids']/tree/field[@name='sequence']" position="after">
+                    <field name="acc_virtual"/>
+				</xpath>
+			</field>
+		</record> -->
+		
+		<record id="aos_view_partner_form_nasa" model="ir.ui.view">
+        	<field name="name">aos.res.partner.custom</field>
+			<field name="model">res.partner</field>
+			<field name="inherit_id" ref="base.view_partner_form" />
+			<field name="arch" type="xml">
+				<!-- <xpath expr="//sheet" position="before">
+					<header>
+                        <button name="draft_partner" states="validate,reject" string="Set to Draft" type="object" class="btn-primary" groups="aos_base.group_partner_validator"/>
+                        <button name="validate_partner" states="draft" string="Validate" type="object" class="btn-primary" groups="aos_base.group_partner_validator"/>
+						<button name="reject_partner" states="draft" string="Reject" type="object" class="btn-primary" groups="aos_base.group_partner_validator"/>
+						<field name="state" widget="statusbar" statusbar_visible="draft,confirm,reject"/>
+					</header>
+				</xpath> -->
+				<div name="button_box" position="inside">
+	            	<button class="oe_stat_button" name="attachment_partner_view" type="object" icon="fa-files-o">
+	                    <field string="Documents" name="doc_count" widget="statinfo"/>
+	                </button>
+                </div>
+				<field name="function" position="before">
+					<field name="aktive_ok"/>
+				</field>
+				<xpath expr="//group/group[1]/field[@name='type']" position="after">
+					<field name="customer_ref" attrs="{'invisible': [('customer','=',False)]}"/>
+					<field name="vendor_ref" attrs="{'invisible': [('supplier','=',False)]}"/>
+					<field name="attn"/>
+	        	</xpath>
+				<field name="ref" position="before">
+					<field name="employee"/>
+				</field>
+				<page autofocus="autofocus" position="attributes">
+					<attribute name="attrs">{'invisible': [('company_type','=','person')]}</attribute>
+				</page>
+                <page name="internal_notes" position="before">
+                	<page name="legal_company" string="Company Legals" attrs="{'invisible': [('company_type','=','person')]}">
+                		<group>
+							<field name="npwp_badan"/>
+                    		<label for="no_nppkp" string="NPPKP"/>
+							<div class="oe_inline">
+								<field name="no_nppkp" class="oe_inline" placeholder="No. NPPKP"/>	
+								<button name="attachment_legal_view" context="{'legal_type': 'NPPKP'}" type="object" class="fa fa-files-o oe_inline" help="Doc. NPPKP"/>
+								<field name="check_nppkp" class="oe_inline"/>		
+							</div>
+							<label for="no_siup" string="SIUP"/>
+							<div class="oe_inline">
+								<field name="no_siup" class="oe_inline" placeholder="No. SIUP"/>	
+								<button name="attachment_legal_view" context="{'legal_type': 'SIUP'}" type="object" class="fa fa-files-o oe_inline" help="Doc. SIUP"/>
+								<field name="check_siup" class="oe_inline"/>		
+							</div>
+							<label for="no_tdp" string="TDP"/>
+							<div class="oe_inline">
+								<field name="no_tdp" class="oe_inline" placeholder="No. TDP"/>	
+								<button name="attachment_legal_view" context="{'legal_type': 'TPD'}" type="object" class="fa fa-files-o oe_inline" help="Doc. TDP"/>		
+								<field name="check_tdp" class="oe_inline"/>
+							</div>
+							<label for="no_akta" string="Akta"/>
+							<div class="oe_inline">
+								<field name="no_akta" class="oe_inline" placeholder="No. Akta"/>	
+								<button name="attachment_legal_view" context="{'legal_type': 'AKTA'}" type="object" class="fa fa-files-o oe_inline" help="Doc. Akta"/>		
+								<field name="check_akta" class="oe_inline"/>
+							</div>
+                    	</group>
+                	</page>
+                    <page name='personal_info' string="Personal Information" attrs="{'invisible': [('company_type','=','company')]}">
+                        <group name="personal_info">
+                        	<group>
+								<!-- <label for="sim_type" string="SIM"/>
+								<div class="address_additional_format">
+									<field name="sim_type" style="width: 33%%"/>
+									<field name="sim_number" placeholder="Nomor SIM 1" style="width: 67%%"/>
+								</div> -->
+								<field name="npwp_personal"/>
+								<field name="nama_ibu"/>
+								<field name="nama_pasangan"/>
+								<field name="jml_anak"/>
+								<field name="status_nikah"/>
+								<label for="tgl_lahir_pasangan" string="TTL Pasangan"/>
+								<div class="address_additional_format">
+									<field name="tgl_lahir_pasangan" placeholder="Tempat" style="width: 33%%"/>
+									<field name="t4_lahir_pasangan" placeholder="Tanggal" style="width: 65%%"/>
+								</div>
+								<field name="nama_pewaris"/>
+								<label for="tgl_lahir_pewaris" string="TTL Pasangan"/>
+								<div class="address_additional_format">
+									<field name="tgl_lahir_pewaris" placeholder="Tempat" style="width: 33%%"/>
+									<field name="t4_lahir_pewaris" placeholder="Tanggal" style="width: 65%%"/>
+								</div>
+								<label for="passport_expire" string="Passport"/>
+								<div class="address_additional_format">
+									<field name="passport_expire" placeholder="Expire" style="width: 33%%"/>
+									<field name="passport_number" placeholder="Nomor Passport" style="width: 65%%"/>
+								</div>
+								<!-- <label for="sim_type" string="SIM 2"/>
+								<div class="address_additional_format">
+									<field name="sim_type3" style="width: 33%%"/>
+									<field name="sim_number3" placeholder="Nomor SIM 2" style="width: 67%%"/>
+								</div>
+								<label for="sim_type" string="SIM 3"/>
+								<div class="address_additional_format">
+									<field name="sim_type3" style="width: 33%%"/>
+									<field name="sim_number3" placeholder="Nomor SIM 3" style="width: 67%%"/>
+								</div> -->
+                        	</group>
+                        	<group>
+								<field name="name_upline"/>
+								<field name="number_upline"/>
+								<field name="t4_ambil_bonus"/>
+								<field name="point_value"/>
+                        		<field name="birthday"/>
+                        		<field name="birthplace"/>
+                        		<field name="religion_id" options='{"no_open": True, "no_create": True}'/>
+								<field name="race_id" options='{"no_open": True, "no_create": True}'/>
+                        	</group>
+                        </group>
+                    </page>
+                </page>
+			</field>
+		</record>
+	        
+		<record id="action_partner_stockist_form" model="ir.actions.act_window">
+            <field name="name">Stockist</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('customer','=',True),('category_id.name','=','Stockist')]</field>
+            <field name="context">{'default_customer':1, 'default_supplier':0, 'default_employee': 0, 'default_is_company': 1}</field>
+            <field name="filter" eval="True"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a contact in your address book.
+              </p><p>
+                Odoo helps you easily track all activities related to
+                a customer: discussions, history of business opportunities,
+                documents, etc.
+              </p>
+            </field>
+        </record>
+        
+        <!-- <record id="action_partner_stockist_kanban_view1" model="ir.actions.act_window.view">
+            <field eval="0" name="sequence"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="base.res_partner_kanban_view"/>
+            <field name="act_window_id" ref="base.action_partner_customer_form"/>
+        </record> -->
+        <record id="action_partner_stockist_form_view2" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="base.view_partner_form"/>
+            <field name="act_window_id" ref="action_partner_stockist_form"/>
+        </record>
+        <record id="action_partner_stockist_tree_view" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="base.view_partner_tree"/>
+            <field name="act_window_id" ref="action_partner_stockist_form"/>
+        </record>
+        
+        
+	    <menuitem name="Stockist"
+	    	id="menu_stockist"
+	        parent="contacts.menu_contacts"
+	        sequence="2"
+	        groups="aos_nasa_partner.group_partner_employee_manager_nasa"
+	        action="action_partner_stockist_form"/>
+	        
+	   
+        <record id="action_partner_stockist_center_form" model="ir.actions.act_window">
+            <field name="name">Stockist Center</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('customer','=',True),('category_id.name','=','Stockist Center')]</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="context">{'default_customer': 0, 'default_supplier': 0, 'default_employee': 1}</field>
+            <field name="filter" eval="True"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a contact in your address book.
+              </p><p>
+                Odoo helps you easily track all activities related to
+                a supplier: discussions, history of purchases,
+                documents, etc.
+              </p>
+            </field>
+        </record>
+        
+        <!-- <record id="action_partner_employee_form_view1" model="ir.actions.act_window.view">
+            <field eval="0" name="sequence"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="base.res_partner_kanban_view"/>
+            <field name="act_window_id" ref="base.action_partner_employee_form"/>
+        </record> -->
+        <record id="action_partner_employee_form_view2" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="base.view_partner_form"/>
+            <field name="act_window_id" ref="action_partner_stockist_center_form"/>
+        </record>
+        <record id="action_partner_employee_tree_view" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="base.view_partner_tree"/>
+            <field name="act_window_id" ref="action_partner_stockist_center_form"/>
+        </record>
+        
+        <menuitem name="Stockist Center"
+	    	id="menu_stockist_center"
+	        parent="contacts.menu_contacts"
+	        sequence="5"
+	        groups="aos_nasa_partner.group_partner_employee_manager_nasa"
+	        action="action_partner_stockist_form"/>
+
+        <record id="action_partner_supplier_nasa_form" model="ir.actions.act_window">
+            <field name="name">Suppliers</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('supplier','=',True),('category_id.name','=','Supplier')]</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'default_customer': 0, 'default_supplier': 1, 'default_employee': 0, 'default_is_company': 1}</field>
+            <field name="filter" eval="True"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a contact in your address book.
+              </p><p>
+                Odoo helps you easily track all activities related to
+                a supplier: discussions, history of purchases,
+                documents, etc.
+              </p>
+            </field>
+        </record>
+        
+        <!-- <record id="action_partner_vendor_form_view1" model="ir.actions.act_window.view">
+            <field eval="0" name="sequence"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="base.res_partner_kanban_view"/>
+            <field name="act_window_id" ref="base.action_partner_supplier_form"/>
+        </record> -->
+        <record id="action_partner_vendor_nasa_form_view2" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="base.view_partner_form"/>
+            <field name="act_window_id" ref="action_partner_supplier_nasa_form"/>
+        </record>
+        <record id="action_partner_vendor_nasa_tree_view" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_partner_supplier_tree"/>
+            <field name="act_window_id" ref="action_partner_supplier_nasa_form"/>
+        </record>
+        
+        <menuitem name="Suppliers"
+	    	id="menu_vendor_nasa"
+	        parent="contacts.menu_contacts"
+	        sequence="20"
+	        groups="aos_nasa_partner.group_partner_vendor_manager_nasa"
+	        action="base.action_partner_supplier_form"/>
+        
+        <record id="action_partner_pusat_nasa_form" model="ir.actions.act_window">
+            <field name="name">Kantor Pelayanan</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('category_id.name','=','Kantor Pelayanan')]</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'default_customer': 1, 'default_supplier': 0, 'default_employee': 0, 'default_is_company': 1}</field>
+            <field name="filter" eval="True"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a contact in your address book.
+              </p><p>
+                Odoo helps you easily track all activities related to
+                a supplier: discussions, history of purchases,
+                documents, etc.
+              </p>
+            </field>
+        </record>
+        
+        <!-- <record id="action_partner_vendor_form_view1" model="ir.actions.act_window.view">
+            <field eval="0" name="sequence"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="base.res_partner_kanban_view"/>
+            <field name="act_window_id" ref="base.action_partner_supplier_form"/>
+        </record> -->
+        <record id="action_partner_pusat_nasa_form_view2" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="base.view_partner_form"/>
+            <field name="act_window_id" ref="action_partner_pusat_nasa_form"/>
+        </record>
+        <record id="action_partner_pusat_nasa_tree_view" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="base.view_partner_tree"/>
+            <field name="act_window_id" ref="action_partner_pusat_nasa_form"/>
+        </record>
+        
+        <menuitem name="Kantor Pelayanan"
+	    	id="menu_pusat_nasa"
+	        parent="contacts.menu_contacts"
+	        sequence="30"
+	        groups="aos_nasa_partner.group_partner_contact_manager_nasa"
+	        action="action_partner_pusat_nasa_form"/>
+	        
+	    <record id="contacts.action_contacts" model="ir.actions.act_window">
+	        <field name="name">Distributor</field>
+	        <field name="type">ir.actions.act_window</field>
+	        <field name="res_model">res.partner</field>
+	        <field name="view_type">form</field>
+	        <field name="view_mode">tree,form,activity</field>
+            <field name="domain">[('category_id.name','=','Distributor')]</field>
+	        <field name="context">{'default_customer': 1, 'default_supplier': 0, 'default_employee': 0, 'default_is_company': 1}</field>
+            <field name="search_view_id" ref="base.view_res_partner_filter"/>
+	        <field name="help" type="html">
+	          <p class="o_view_nocontent_smiling_face">
+	            Create a contact in your address book
+	          </p><p>
+	            Odoo helps you to easily track all activities related to a customer.
+	          </p>
+	        </field>
+	    </record>
+	    <!-- <record id="contacts.action_contacts_view_kanban" model="ir.actions.act_window.view">
+	        <field name="sequence" eval="0"/>
+	        <field name="view_mode">kanban</field>
+	        <field name="view_id" ref="base.res_partner_kanban_view"/>
+	        <field name="act_window_id" ref="contacts.action_contacts"/>
+	    </record>
+	    <record id="contacts.action_contacts_view_tree" model="ir.actions.act_window.view">
+	        <field name="sequence" eval="1"/>
+	        <field name="view_mode">tree</field>
+	        <field name="view_id" ref="base.view_partner_tree"/>
+	        <field name="act_window_id" ref="contacts.action_contacts"/>
+	    </record>
+	    <record id="contacts.action_contacts_view_form" model="ir.actions.act_window.view">
+	        <field name="sequence" eval="2"/>
+	        <field name="view_mode">form</field>
+	        <field name="view_id" ref="base.view_partner_form"/>
+	        <field name="act_window_id" ref="contacts.action_contacts"/>
+	    </record> -->
+	    <menuitem id="contacts.res_partner_menu_contacts"
+	        name="Distributor"
+	        action="contacts.action_contacts"
+	        parent="contacts.menu_contacts"
+	        sequence="20"/>
+	        
+        
+		
+	</data>
+</odoo>

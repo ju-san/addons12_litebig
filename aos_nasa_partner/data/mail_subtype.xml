@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+	
+		<record model="mail.message.subtype" id="mt_partner_created">
+		    <field name="name">Partner Created</field>
+		    <field name="res_model">res.partner</field>
+            <field name="default" eval="False"/>
+            <field name="hidden" eval="True"/>
+            <field name="description">Partner Created</field>
+		</record>
+		
+		<record model="mail.message.subtype" id="mt_partner_validated">
+		    <field name="name">Partner Validated</field>
+		    <field name="res_model">res.partner</field>
+		</record>
+		
+		<record model="mail.message.subtype" id="mt_partner_rejected">
+		    <field name="name">Partner Rejected</field>
+		    <field name="res_model">res.partner</field>
+		</record>
+		
+	</data>
+</odoo>

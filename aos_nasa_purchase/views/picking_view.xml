@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data> 
+    
+    
+        <record id="vpicktree_nasa" model="ir.ui.view">
+            <field name="name">stock.picking.tree.nasa</field>
+            <field name="model">stock.picking</field>
+	        <field name="inherit_id" ref="stock.vpicktree"/>
+	        <field name="arch" type="xml">
+	        	<field name="state" position="after">
+                    <field name="active" invisible="1"/>
+                </field>
+	        </field>
+	    </record>
+	    
+        <record id="view_picking_form_nasa" model="ir.ui.view">
+            <field name="name">stock.picking.form.nasa</field>
+            <field name="model">stock.picking</field>
+	        <field name="inherit_id" ref="stock.view_picking_form"/>
+	        <field name="arch" type="xml">
+	            <div name="button_box" position="inside">
+                    <button name="toggle_active" type="object"
+                            class="oe_stat_button" icon="fa-archive">
+                        <field name="active" widget="boolean_button"
+                            options='{"terminology": "archive"}'/>
+                    </button>
+                </div>
+	        </field>
+	    </record>
+	    
+	    <record id="view_picking_internal_search_nasa" model="ir.ui.view">
+            <field name="name">stock.picking.internal.search.nasa</field>
+            <field name="model">stock.picking</field>
+	        <field name="inherit_id" ref="stock.view_picking_internal_search"/>
+            <field name="arch" type="xml">
+            	<filter name="activities_my" position="before">
+            		<filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+            	</filter>
+            </field>
+        </record>
+        
+        <!-- <record id="view_move_line_tree_nasa" model="ir.ui.view">
+	        <field name="name">stock.move.line.tree</field>
+	        <field name="model">stock.move.line</field>
+	        <field name="inherit_id" ref="stock.view_move_line_tree"/>
+	        <field name="arch" type="xml">
+	        	<field name="location_id" position="attributes">
+	        		<attribute name="invisible">1</attribute>
+	        	</field>
+	        	<field name="location_dest_id" position="attributes">
+	        		<attribute name="invisible">1</attribute>
+	        	</field>
+	        	<field name="location_dest_id" position="after">
+	        		<field name="display_location_id"/>
+	        		<field name="display_location_dest_id"/>
+	        		<field name="group_id"/>
+	        	</field>
+	        	<field name="location_dest_id" position="after">
+	        		<field name="display_location_id"/>
+	        		<field name="display_location_dest_id"/>
+	        	</field>	        	
+	        </field>
+	    </record> -->
+	    
+	    <record id="stock.view_move_line_tree" model="ir.ui.view">
+	        <field name="name">stock.move.line.tree</field>
+	        <field name="model">stock.move.line</field>
+	        <field name="arch" type="xml">
+	            <tree decoration-muted="state == 'cancel'" decoration-danger="(state not in ('cancel','done'))" string="Move Lines" create="0" default_order="date">
+	                <field name="group_id"/>
+	                <field name="reference" string="Reference"/>
+	                <field name="product_id"/>
+	                <field name="date"/>
+	        		<field name="location_id" invisible="1"/>
+	                <field name="location_dest_id" invisible="1"/>
+	        		<field name="display_location_id"/>
+	        		<field name="display_location_dest_id"/>
+	                <field name="qty_done" string="Quantity Done"/>
+	                <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
+	                <field name="state"/>
+	            </tree>
+	        </field>
+	    </record>
+	    
+    </data>
+</odoo> 

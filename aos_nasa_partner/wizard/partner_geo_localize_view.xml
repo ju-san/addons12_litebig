@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <record id="partner_geo_localize_view" model="ir.ui.view">
+            <field name="name">Set Geo Localize</field>
+            <field name="model">partner.geo.localize</field>
+            <field name="arch" type="xml">
+                <form string="Set Geo Localize">
+                    <label string="All Geolocation selected partner will be updated. Please complete fields street, zip, city, province and country."/>
+                    <footer>
+                        <button string="Geolocate" name="action_geo_localize" type="object" default_focus="1" class="btn-primary"/>
+                        <button string="Cancel" class="btn-default" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_partner_geo_localize" model="ir.actions.act_window">
+            <field name="name">Set Geo Localize</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">partner.geo.localize</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="partner_geo_localize_view"/>
+            <field name="context">{}</field>
+            <field name="target">new</field>
+            <field name="help">This wizard will validate all journal entries selected. Once journal entries are cancelled, you can not update them anymore.</field>
+        </record>
+
+        <record model="ir.values" id="partner_geo_localize_values">
+            <field name="model_id" ref="base.model_res_partner" />
+            <field name="name">Set Geo Localize</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_partner_geo_localize'))" />
+            <field name="key">action</field>
+            <field name="model">res.partner</field>
+        </record>
+
+    </data>
+</odoo>

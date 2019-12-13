@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data> 
+    
+    
+        <record id="account_invoice_nasa" model="ir.ui.view">
+            <field name="name">account.invoice.form</field>
+            <field name="model">account.invoice</field>
+	        <field name="inherit_id" ref="account.invoice_form"/>
+	        <field name="arch" type="xml">
+	        	<div name="button_box" position="inside">
+                    <button name="toggle_active" type="object"
+                            class="oe_stat_button" icon="fa-archive">
+                        <field name="active" widget="boolean_button"
+                            options='{"terminology": "archive"}'/>
+                    </button>
+                </div>
+	            <field name="partner_id" position="attributes">
+	            	<attribute name="string">ST/SC/Distributor</attribute>
+	            </field>
+	            <field name="partner_id" position="after">
+	            	<field name="partner_ref"/>
+	            	<field name="saldo_stockist"/>
+	            </field>
+	            <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='name']" position="after">
+					<field name="poin_ok"/>
+				</xpath>
+				<xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='price_total']" position="after">
+					<field name="point_total"/>
+				</xpath>
+				<!-- <xpath expr="//field[@name='comment']" position="before">
+					<div>
+						<label for="faktur_sementara"/>
+	                    <field name="faktur_sementara" class="oe_inline"/>
+	                </div>
+					<div>
+						<label for="apakah_promo"/>
+	                    <field name="apakah_promo" class="oe_inline"/>
+	                </div>
+					<div>
+						<label for="barang_dikirim"/>
+	                    <field name="barang_dikirim" class="oe_inline"/>
+	                </div>
+					<div>
+						<label for="barang_dikirim_kesub"/>
+	                    <field name="barang_dikirim_kesub" class="oe_inline"/>
+	                </div>
+	                <newline/>
+             	</xpath> -->
+	        </field>
+	    </record>
+    
+        <record id="account_invoice_nasa_tree" model="ir.ui.view">
+            <field name="name">account.invoice.form</field>
+            <field name="model">account.invoice</field>
+	        <field name="inherit_id" ref="account.invoice_tree"/>
+	        <field name="arch" type="xml">
+	        	<field name="state" position="after">
+                    <field name="active" invisible="1"/>
+                </field>
+	        	<field name="amount_total_signed" position="after">
+                    <field name="point_amount_total" sum="Total Points" widget="monetary"/>
+                </field>
+	        </field>
+	    </record>
+    
+        <!-- <record id="account_invoice_supplier_nasa" model="ir.ui.view">
+            <field name="name">account.invoice.supplier.form</field>
+            <field name="model">account.invoice</field>
+	        <field name="inherit_id" ref="account.invoice_supplier_form"/>
+	        <field name="arch" type="xml">
+                <xpath expr="//sheet/div[1]" position="before">
+	                <div class="oe_button_box" name="button_box">
+	                    <button name="toggle_active" type="object"
+                            class="oe_stat_button" icon="fa-archive">
+                        <field name="active" widget="boolean_button"
+                            options='{"terminology": "archive"}'/>
+                    	</button>
+	                </div>
+                </xpath>
+	        </field>
+	    </record> -->
+    
+        <record id="account_invoice_supplier_nasa_tree" model="ir.ui.view">
+            <field name="name">account.invoice.supplier.form</field>
+            <field name="model">account.invoice</field>
+	        <field name="inherit_id" ref="account.invoice_supplier_tree"/>
+	        <field name="arch" type="xml">
+	        	<field name="state" position="after">
+                    <field name="active" invisible="1"/>
+                </field>
+	        </field>
+	    </record>
+	    
+	    <record id="view_account_invoice_nasa_filter" model="ir.ui.view">
+            <field name="name">account.invoice.select</field>
+            <field name="model">account.invoice</field>
+	        <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+            <field name="arch" type="xml">
+            	<filter name="activities_my" position="before">
+            		<filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+            	</filter>
+            </field>
+        </record>
+	    
+	    
+	    
+    </data>
+</odoo> 

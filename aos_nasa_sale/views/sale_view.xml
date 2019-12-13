@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data> 
+    
+		<record id="view_sale_order_form_nasa" model="ir.ui.view">
+            <field name="name">sale.order.form.nasa</field>
+            <field name="model">sale.order</field>
+			<field name="inherit_id" ref="sale.view_order_form" />
+			<field name="arch" type="xml">
+				<!-- <xpath expr="//button[@name='action_quotation_send' and @states='draft']" position="after">
+                    <button name="action_quotation_send" string="Send by Email" type="object" states="sent" class="btn-primary"/>
+	            </xpath>
+	            <xpath expr="//button[@name='action_quotation_send' and @states='sent,sale']" position="attributes">
+	                <attribute name="invisible">1</attribute>
+	            </xpath>
+	            <xpath expr="//button[@name='action_quotation_send' and @states='sent,sale']" position="after">
+					<button name="action_sale_order_send" string="Send by Email" type="object" states="sale"/>
+	            </xpath> -->
+	            <div name="button_box" position="inside">
+                    <button name="toggle_active" type="object"
+                            class="oe_stat_button" icon="fa-archive">
+                        <field name="active" widget="boolean_button"
+                            options='{"terminology": "archive"}'/>
+                    </button>
+                </div>
+	            <field name="partner_id" position="after">
+	            	<field name="partner_ref"/>
+	            	<field name="saldo_stockist"/>
+	            </field>
+	            <field name="pricelist_id" position="before">
+	            	<field name="partner_category_id" required="1" options="{'no_create': True, 'no_open': True}"/>
+	            </field>
+	            <field name="pricelist_id" position="attributes">
+	            	<attribute name="domain">[('partner_category_id','=',partner_category_id)]</attribute>
+	            	<attribute name="options">{'no_create': True, 'no_open': True}</attribute>
+	            </field>
+	            <field name="partner_invoice_id" position="attributes">
+	            	<attribute name="invisible">1</attribute>
+	            </field>
+	            <field name="partner_shipping_id" position="replace"/>
+	            <field name="partner_invoice_id" position="after">
+            		<field name="pilih_alamat"/>
+	            	<label for="partner_shipping_id"/>
+	            	<div>
+		            	<field name="partner_shipping_id" attrs="{'invisible': [('pilih_alamat','=','baru')]}" string="Alamat" context="{'show_address': 1}" options="{'no_create': True, 'always_reload': True}"/>
+		            	<field name="street" attrs="{'invisible': [('pilih_alamat','=','sama')]}"/>
+	            	</div>
+                </field>
+	            <!-- <field name="validity_date" position="before">
+	            	<field name="faktur_sementara"/>
+	            	<field name="apakah_promo"/>
+	            </field> -->
+	            <xpath expr="//field[@name='order_line']/tree/field[@name='name']" position="after">
+					<field name="poin_ok"/>
+				</xpath>
+	            <xpath expr="//field[@name='order_line']/tree/field[@name='qty_delivered']" position="attributes">
+					<attribute name="invisible">1</attribute>
+				</xpath>
+	            <xpath expr="//field[@name='order_line']/tree/field[@name='tax_id']" position="attributes">
+					<attribute name="invisible">1</attribute>
+				</xpath>
+				<xpath expr="//field[@name='order_line']/tree/field[@name='price_total']" position="after">
+					<field name="point_total"/>
+				</xpath>
+				<xpath expr="//field[@name='note']" position="before">
+					<div>
+						<label for="faktur_sementara"/>
+	                    <field name="faktur_sementara" class="oe_inline"/>
+	                </div>
+					<div>
+						<label for="apakah_promo"/>
+	                    <field name="apakah_promo" class="oe_inline"/>
+	                </div>
+					<div>
+						<label for="barang_dikirim"/>
+	                    <field name="barang_dikirim" class="oe_inline"/>
+	                </div>
+					<div>
+						<label for="barang_dikirim_kesub"/>
+	                    <field name="barang_dikirim_kesub" class="oe_inline"/>
+	                </div>
+	                <newline/>
+             	</xpath>
+	            <!-- <field name="company_id" position="after">
+	            	<field name="picking_create"/>
+	            </field> -->
+             	
+				<!-- <xpath expr="//field[@name='order_line']/tree/field[@name='name']" position="attributes">
+					<attribute name="groups">base.group_no_one</attribute>
+				</xpath>
+				<xpath expr="//field[@name='order_line']/tree/field[@name='product_id']" position="after">
+					<field name="brand_id" options="{'no_create': True}"/>
+				</xpath> -->
+			</field>
+		</record>
+    
+        <record id="view_order_tree_nasa" model="ir.ui.view">
+            <field name="name">sale.order.tree.nasa</field>
+            <field name="model">sale.order</field>
+	        <field name="inherit_id" ref="sale.view_order_tree"/>
+	        <field name="arch" type="xml">
+	        	<field name="amount_total" position="after">
+                    <field name="point_amount_total" sum="Total Points" widget="monetary"/>
+                </field>
+	        	<field name="state" position="after">
+                    <field name="active" invisible="1"/>
+                </field>
+	        </field>
+	    </record>
+        <record id="view_quotation_tree_nasa" model="ir.ui.view">
+            <field name="name">sale.order.tree.nasa</field>
+            <field name="model">sale.order</field>
+	        <field name="inherit_id" ref="sale.view_quotation_tree"/>
+	        <field name="arch" type="xml">
+	        	<field name="amount_total" position="after">
+                    <field name="point_amount_total" sum="Total Points" widget="monetary"/>
+                </field>
+	        	<field name="state" position="after">
+                    <field name="active" invisible="1"/>
+                </field>                
+	        </field>
+	    </record>
+	    
+	    <record id="view_sales_order_filter_nasa" model="ir.ui.view">
+            <field name="name">sale.order.list.select</field>
+            <field name="model">sale.order</field>
+	        <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+            <field name="arch" type="xml">
+            	<filter name="activities_my" position="before">
+            		<!-- <filter string="My Company" domain="[('company_id','=',user.company_id)]" name="my_sale_orders_filter"/> -->
+            		<filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+            	</filter>
+            </field>
+        </record>
+        
+        <record id="view_order_form_inherit_sale_stock_nasa" model="ir.ui.view">
+            <field name="name">sale.order.form.sale.stock</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale_stock.view_order_form_inherit_sale_stock"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='warehouse_id']" position="replace"/>
+           </field>
+        </record>
+        
+        <record id="view_order_form_nasa2" model="ir.ui.view">
+            <field name="name">sale.order.form.nasa2</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='payment_term_id']" position="after">
+                	<field name="warehouse_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
+                </xpath>
+           </field>
+        </record>
+        
+        <!-- <record id="sale.action_quotations_with_onboarding" model="ir.actions.act_window">
+            <field name="domain">[('company_id','=',context.get('force_company', False))]</field>
+        </record> -->
+		
+    </data>
+</odoo> 
