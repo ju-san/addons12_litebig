@@ -112,16 +112,6 @@ class PurchaseOrderLine(models.Model):
         return message_dict
                     
     #@api.depends('virtual_available')
-    @api.onchange('product_id')
-    def _compute_range_message(self):
-        for pline in self:
-            message_dict = pline._get_message_dict()
-            message = message_dict.get('operation') and message_dict['operation'] or ""
-            if message_dict['operation'] == 'indent':
-                message = message_dict['operation']
-            elif message_dict['operation'] in ('<', '>='):
-                message = message_dict['operation'] + ' ' + message_dict['range_available']
-            pline.range_qty = message
             
     #@api.depends('product_id.stock_move_ids.product_qty', 'product_id.stock_move_ids.state')
     def _compute_quantities(self):
@@ -203,7 +193,17 @@ class PurchaseOrderLine(models.Model):
         # negative discounts (= surcharge) are included in the display price
         return max(base_price, final_price)
     
-    
+    @api.onchange('product_id')
+    def _compute_range_message(self):
+        #for pline in self:
+        message_dict = self._get_message_dict()
+        message = message_dict.get('operation') and message_dict['operation'] or ""
+        if message_dict['operation'] == 'indent':
+            message = message_dict['operation']
+        elif message_dict['operation'] in ('<', '>='):
+            message = message_dict['operation'] + ' ' + message_dict['range_available']
+        self.range_qty = message
+
     @api.onchange('product_qty', 'product_uom')
     def _onchange_quantity(self):
         if not self.product_id:
