@@ -39,6 +39,8 @@ Module based on Ade Anshori
     'test': [],
     'data': [
         "security/account_security.xml",
+        "wizard/unpost_account_move_view.xml",
+        "wizard/load_coa_view.xml",
         'views/menuitem_view.xml',
         'views/account_invoice_view.xml',
      ],
