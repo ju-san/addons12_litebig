@@ -30,7 +30,7 @@ class StockMoveLine(models.Model):
             else:
                 mline.display_location_dest_id = mline.location_dest_id.name
             mline.group_id = mline.picking_id and mline.picking_id.group_id and mline.picking_id.group_id.name \
-                     or mline.picking_id and mline.picking_id.origin or mline.origin
+                or mline.picking_id and mline.picking_id.origin or ''
             #mline.display_location_dest_id = mline.partner_id and mline.partner_id.name if mline.location_dest_id.usage in ('customer','supplier') else mline.location_dest_id.display_name
         
     location_id = fields.Many2one('stock.location', 'Source', required=True)
