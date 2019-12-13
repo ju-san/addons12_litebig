@@ -33,7 +33,7 @@ class ResCompany(models.Model):
     color = fields.Integer(string='Color Index')
     
 class ResUsers(models.Model):
-    _inherit = "res.users"
+    _name = "res.users"
     _inherit = ['res.users', 'mail.thread', 'mail.activity.mixin']
     
     category_id = fields.Many2many('res.users.category', column1='user_id', column2='category_id', string='Tags')
