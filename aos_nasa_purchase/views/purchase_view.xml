@@ -64,7 +64,7 @@
                 	<field name="pricelist_id" domain="[('partner_category_id','=',partner_category_id)]" options="{'no_create': True, 'no_open': True}"/>
                 </xpath>
 	            <xpath expr="//group/group[1]/field[@name='partner_ref']" position="after">
-	            	<field name="company_id" string="Mitra Usaha" options="{'no_create': True}"/>
+	            	<field name="company_id" string="SC/Stockist/Mitra Usaha" options="{'no_create': True}"/>
 	            	<field name="customer_ref"/>
 	            	<field name="warehouse_id" string="Kode Gudang" options="{'no_create': True}"/>
             		<field name="pilih_alamat"/>
