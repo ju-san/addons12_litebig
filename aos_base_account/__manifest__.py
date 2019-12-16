@@ -29,7 +29,7 @@
     'images':  ['images/main_screenshot.png'],
     'category': 'Accounting',
     'summary': 'Advance of a module by Alphasoft',
-    'depends': ['account'],
+    'depends': ['account', 'aos_nasa_intercompany'],
     'description': """
 Module based on Ade Anshori
 =====================================================

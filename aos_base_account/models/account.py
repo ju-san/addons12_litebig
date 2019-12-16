@@ -93,6 +93,15 @@ class ResCompany(models.Model):
         # set the default taxes on the company
         company.account_sale_tax_id = self.env['account.tax'].search([('type_tax_use', 'in', ('sale', 'all')), ('company_id', '=', company.id)], limit=1).id
         company.account_purchase_tax_id = self.env['account.tax'].search([('type_tax_use', 'in', ('purchase', 'all')), ('company_id', '=', company.id)], limit=1).id
+        #UPDATE INTERCOMPANY
+        warehouse = self.env['stock.warehouse'].search([('company_id','=',company.id)], limit=1)
+        sale_journal = self.env['account.journal'].search([('company_id','=',company.id),('type','=','sale')], limit=1)
+        purchase_journal = self.env['account.journal'].search([('company_id','=',company.id),('type','=','purchase')], limit=1)
+        company.warehouse_id = warehouse and warehouse.id
+        company.auto_validation = 'validated'
+        company.intercompany_user_id = company.partner_id.user_ids and company.partner_id.user_ids.id or 1
+        company.sale_journal = sale_journal and sale_journal.id
+        company.purchase_journal = purchase_journal and purchase_journal.id
         return {}
 
     
