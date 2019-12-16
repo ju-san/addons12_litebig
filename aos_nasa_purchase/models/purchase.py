@@ -224,13 +224,14 @@ class PurchaseOrderLine(models.Model):
         location_id = False
         if self._context.get('location'):
             location_id = self.sudo()._context.get('location').id
+        #print ('----',location_id)
         if not location_id and self.sudo().location_id.usage == 'internal':
             location_id = self.sudo().location_id.id
         if location_id:
             res = self.product_id.sudo().with_context(location=location_id)._compute_quantities_dict(self._context.get('lot_id'), self._context.get('owner_id'), self._context.get('package_id'), self._context.get('from_date'), self._context.get('to_date'))
             if res[self.product_id.id].get('virtual_available'):
                 virtual_available = res[self.product_id.id]['virtual_available']
-        #print ('--virtual_available--',self.sudo().location_id,virtual_available)
+        #print ('--virtual_available--',self.sudo().location_id,self._context.get('location'),virtual_available)
         return virtual_available
         
     #@api.onchange('location_id')
@@ -316,10 +317,12 @@ class PurchaseOrderLine(models.Model):
         if product_lang.description_purchase:
             self.name = product_lang.description_purchase
         self.location_id = self.sudo()._compute_locations()#self.order_id.warehouse_id.lot_stock_id.id
-        self.virtual_available = self.sudo()._compute_quantities()
+        #print ('===self.location_id===',self.location_id)
+        self.virtual_available = self.sudo().with_context(location=self.location_id)._compute_quantities()
         self.range_qty = self.sudo()._compute_range_message()
         self._compute_tax_id()
 
         self._suggest_quantity()
         self._onchange_quantity()
+        self.point_total = self.product_id.bisnis_poin
         return result
