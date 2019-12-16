@@ -315,9 +315,9 @@ class PurchaseOrderLine(models.Model):
         self.name = product_lang.display_name
         if product_lang.description_purchase:
             self.name = product_lang.description_purchase
-        self.location_id = self._compute_locations()#self.order_id.warehouse_id.lot_stock_id.id
-        self.virtual_available = self._compute_quantities()
-        self.range_qty = self._compute_range_message()
+        self.location_id = self.sudo()._compute_locations()#self.order_id.warehouse_id.lot_stock_id.id
+        self.virtual_available = self.sudo()._compute_quantities()
+        self.range_qty = self.sudo()._compute_range_message()
         self._compute_tax_id()
 
         self._suggest_quantity()
