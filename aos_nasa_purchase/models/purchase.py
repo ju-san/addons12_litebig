@@ -223,7 +223,7 @@ class PurchaseOrderLine(models.Model):
         virtual_available = 0.0
         location_id = False
         if self._context.get('location'):
-            location_id = self._context.get('location').id
+            location_id = self.sudo()._context.get('location').id
         if not location_id and self.sudo().location_id.usage == 'internal':
             location_id = self.sudo().location_id.id
         if location_id:
