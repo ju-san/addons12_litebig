@@ -50,6 +50,7 @@
                 </xpath> -->
 	            <xpath expr="//group/group[1]/field[@name='partner_id']" position="attributes">
 	            	<attribute name="string">Penyedia</attribute>
+	            	<attribute name="domain">[('supplier','=',True),'|',('company_id','=',company_id),('company_id','=',False)]</attribute>
                 </xpath>
 	            <xpath expr="//group/group[1]/field[@name='partner_ref']" position="attributes">
 	            	<attribute name="invisible">1</attribute>

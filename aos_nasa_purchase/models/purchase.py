@@ -5,6 +5,7 @@ from odoo.addons import decimal_precision as dp
 from datetime import datetime 
 from odoo.tools.misc import formatLang, format_date
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.exceptions import UserError, ValidationError
 
 from odoo.addons.purchase.models.purchase import PurchaseOrder as Purchase
 
@@ -255,6 +256,8 @@ class PurchaseOrderLine(models.Model):
         if not self.product_uom or (self.product_id.uom_id.id != self.product_uom.id):
             vals['product_uom'] = self.product_id.uom_id
             vals['product_qty'] = self.product_uom_qty or 1.0
+        if self.order_id.pricelist_id:
+            raise UserError(_('You should define pricelist for this order.'))
         product = self.product_id.with_context(
             lang=self.order_id.partner_id.lang,
             partner=self.order_id.partner_id,
