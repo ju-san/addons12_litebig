@@ -256,8 +256,10 @@ class PurchaseOrderLine(models.Model):
         if not self.product_uom or (self.product_id.uom_id.id != self.product_uom.id):
             vals['product_uom'] = self.product_id.uom_id
             vals['product_qty'] = self.product_uom_qty or 1.0
-        if self.order_id.pricelist_id:
+            
+        if not self.order_id.pricelist_id:
             raise UserError(_('You should define pricelist for this order.'))
+        
         product = self.product_id.with_context(
             lang=self.order_id.partner_id.lang,
             partner=self.order_id.partner_id,
