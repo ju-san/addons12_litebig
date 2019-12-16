@@ -69,8 +69,8 @@ class PurchaseOrder(models.Model):
             self.partner_ref = sale_order.name
 
         #Validation of sales order
-        if company.auto_validation == 'validated':
-            sale_order.sudo(intercompany_uid).action_confirm()
+        #if company.auto_validation == 'validated':
+        #    sale_order.sudo(intercompany_uid).action_confirm()
 
     @api.one
     def _prepare_sale_order_data(self, name, partner, company, direct_delivery_address):
