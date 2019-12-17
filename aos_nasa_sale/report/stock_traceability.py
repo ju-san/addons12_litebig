@@ -127,7 +127,7 @@ class MrpStockReport(models.TransientModel):
             'lot_name': move_line.lot_id.name,
             'lot_id': move_line.lot_id.id,
             'group_id': move_line.picking_id and move_line.picking_id.group_id and move_line.picking_id.group_id.name \
-                     or move_line.picking_id and move_line.picking_id.origin or move_line.origin,
+                     or move_line.picking_id and move_line.picking_id.origin or '-',
             #'res_group_id': res_group_id, 
             #'res_group_model': res_group_model,
             'location_source': move_line.location_id.usage == 'internal' and move_line.location_id.name \
