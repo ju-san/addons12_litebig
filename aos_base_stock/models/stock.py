@@ -5,13 +5,15 @@ from odoo import api, fields, models, _
 
 class StockWarehouse(models.Model):
     _inherit = 'stock.warehouse'
+    _order = 'sequence'
     
     def _get_locations_values(self, vals):
         sub_locations = super(StockWarehouse, self)._get_locations_values(vals=vals)
         #CHANGE NAME STOCK INTO WAREHOUSE STOCK
         sub_locations.update({'lot_stock_id': {'name': vals.get('name')}})
         return sub_locations
-
+    
+    sequence = fields.Integer('Sequence', help="Used to order the 'All Operations' kanban view")
 
 class StockPickingType(models.Model):
     _inherit = 'stock.picking.type'
