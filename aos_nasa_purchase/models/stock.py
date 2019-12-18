@@ -5,6 +5,12 @@ from odoo.addons import decimal_precision as dp
 from datetime import datetime 
 from odoo.tools.misc import formatLang, format_date
 
+# class StockPickingType(models.Model): 
+#     _inherit = 'stock.picking.type'
+#     
+#     fold = fields.Boolean(string='Folded in Kanban',
+#         help='This stage is folded in the kanban view when there are no records in that stage to display.')
+
 class StockPicking(models.Model): 
     _inherit = 'stock.picking'
     

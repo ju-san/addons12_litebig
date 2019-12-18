@@ -66,8 +66,9 @@ class StockPickingType(models.Model):
             action = self._get_action('stock.stock_picking_action_picking_type')
         return action
     
-    split_assign_picking = fields.Boolean('Split Picking', help='Always check for create split picking for every rules')
-    
+    split_assign_picking = fields.Boolean('Split Picking', help='Always check for create split picking for every rules')    
+    fold = fields.Boolean(string='Folded in Kanban',
+        help='This stage is folded in the kanban view when there are no records in that stage to display.')
     
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
