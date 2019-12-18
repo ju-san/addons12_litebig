@@ -9,6 +9,7 @@
 	            <xpath expr="//group[2]/group[2]" position="after">
 	                <group string="Additional Setting">
 		                <field name="split_assign_picking"/>
+		                <field name="fold"/>
                     </group>
 	            </xpath>
 	        </field>
