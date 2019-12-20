@@ -58,11 +58,13 @@ class PurchaseOrder(models.Model):
         SaleOrderLine = self.env['sale.order.line']
         # read it as sudo, because inter-compagny user can not have the access right on PO
         sale_order_data = self.sudo()._prepare_sale_order_data(self.name, company_partner, company, self.dest_address_id and self.dest_address_id.id or False)
-        sale_order = SaleOrder.sudo(intercompany_uid).create(sale_order_data[0])
+        #print ('==sale_order_data==',sale_order_data)
+        sale_order = SaleOrder.sudo().create(sale_order_data[0])
+        #print ('==sale_order==',sale_order)
         # lines are browse as sudo to access all data required to be copied on SO line (mainly for company dependent field like taxes)
         for line in self.order_line.sudo():
             so_line_vals = self._prepare_sale_order_line_data(line, company, sale_order.id)
-            SaleOrderLine.sudo(intercompany_uid).create(so_line_vals)
+            SaleOrderLine.sudo().create(so_line_vals)
 
         # write vendor reference field on PO
         if not self.partner_ref:
@@ -122,7 +124,7 @@ class PurchaseOrder(models.Model):
             taxes = line.product_id.taxes_id
         company_taxes = [tax_rec for tax_rec in taxes if tax_rec.company_id.id == company.id]
         if sale_id:
-            so = self.env["sale.order"].sudo(company.intercompany_user_id).browse(sale_id)
+            so = self.env["sale.order"].sudo().browse(sale_id)
             company_taxes = so.fiscal_position_id.map_tax(company_taxes, line.product_id, so.partner_id)
         quantity = line.product_id and line.product_uom._compute_quantity(line.product_qty, line.product_id.uom_id) or line.product_qty
         price = line.product_id and line.product_uom._compute_price(price, line.product_id.uom_id) or price

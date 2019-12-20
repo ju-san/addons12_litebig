@@ -49,10 +49,10 @@ class SaleOrder(models.Model):
         PurchaseOrderLine = self.env['purchase.order.line']
         # read it as sudo, because inter-compagny user can not have the access right on PO
         po_vals = self.sudo()._prepare_purchase_order_data(company, company_partner)
-        purchase_order = PurchaseOrder.sudo(intercompany_uid).create(po_vals[0])
+        purchase_order = PurchaseOrder.sudo().create(po_vals[0])
         for line in self.order_line.sudo().filtered(lambda l: not l.display_type):
             po_line_vals = self._prepare_purchase_order_line_data(line, self.date_order, purchase_order.id, company)
-            PurchaseOrderLine.sudo(intercompany_uid).create(po_line_vals)
+            PurchaseOrderLine.sudo().create(po_line_vals)
 
         # write customer reference field on SO
         if not self.client_order_ref:
@@ -122,7 +122,7 @@ class SaleOrder(models.Model):
         # fetch taxes by company not by inter-company user
         company_taxes = taxes.filtered(lambda t: t.company_id == company)
         if purchase_id:
-            po = self.env["purchase.order"].sudo(company.intercompany_user_id).browse(purchase_id)
+            po = self.env["purchase.order"].sudo().browse(purchase_id)
             company_taxes = po.fiscal_position_id.map_tax(company_taxes, so_line.product_id, po.partner_id)
 
         quantity = so_line.product_id and so_line.product_uom._compute_quantity(so_line.product_uom_qty, so_line.product_id.uom_po_id) or so_line.product_uom_qty
