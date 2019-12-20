@@ -17,7 +17,7 @@ class PurchaseOrder(models.Model):
             # get the company from partner then trigger action of intercompany relation
             company_rec = self.env['res.company']._find_company_from_partner(order.partner_id.id)
             if company_rec and (not order.auto_generated):
-                order.inter_company_create_sale_order(company_rec)
+                order.sudo().inter_company_create_sale_order(company_rec)
         return res
 
 
