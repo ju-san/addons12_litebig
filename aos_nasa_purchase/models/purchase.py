@@ -47,7 +47,7 @@ class PurchaseOrder(models.Model):
     street = fields.Text('Alamat Manual')
     #wh_picking_type_id = fields.Many2one('stock.warehouse', 'Deliver To', states=Purchase.READONLY_STATES, required=True,help="This will determine operation type of incoming shipment")
     warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse',
-        required=True, states=Purchase.READONLY_STATES)
+        required=True)#, states=Purchase.READONLY_STATES)
     company_address_id = fields.Many2one('res.partner', related='company_id.partner_id', string='Alamat',
         help="Put an address if you want to deliver directly from the vendor to the customer. "
              "Otherwise, keep empty to deliver to your own company.")
