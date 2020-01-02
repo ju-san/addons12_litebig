@@ -65,13 +65,13 @@ class PurchaseOrder(models.Model):
     @api.multi
     @api.onchange('warehouse_id')
     def _onchange_warehouse_id(self):
-        if not self.warehouse_id:
-            return
         for order in self:
             for line in order.order_line:
-                line.location_id = self.sudo().warehouse_id.lot_stock_id.id
-                line.virtual_available = line.sudo().with_context(location=line.location_id)._compute_quantities()
-                line.range_qty = line.sudo().with_context(virtual_available=line.virtual_available)._compute_range_message()
+                line.warehouse_id = order.warehouse_id and order.warehouse_id.id
+                line.location_id = order.warehouse_id.lot_stock_id.id
+                line.virtual_available = line.with_context(location=line.location_id)._compute_quantities()
+                line.range_qty = line.with_context(virtual_available=line.virtual_available)._compute_range_message()
+                #print ('----nnnn---',line,order.warehouse_id,line.location_id,line.virtual_available,line.range_qty)
         
 class PurchaseOrderLine(models.Model): 
     _inherit = 'purchase.order.line'
@@ -135,7 +135,7 @@ class PurchaseOrderLine(models.Model):
                     #print ('==_compute_quantities=',location_id,move.virtual_available)
     
     warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse',
-        required=True, related='order_id.warehouse_id')
+        required=True)
     location_id = fields.Many2one(
         'stock.location', 'Location', compute_sudo=True, required=False,
         help="Sets a location if you produce at a fixed location. This can be a partner location if you subcontract the manufacturing operations.")
@@ -320,6 +320,7 @@ class PurchaseOrderLine(models.Model):
         self.name = product_lang.display_name
         if product_lang.description_purchase:
             self.name = product_lang.description_purchase
+        self.warehouse_id = self.sudo().order_id.warehouse_id.id
         self.location_id = self.sudo()._compute_locations()#self.order_id.warehouse_id.lot_stock_id.id
         #print ('===self.location_id===',self.location_id)
         self.virtual_available = self.sudo().with_context(location=self.location_id)._compute_quantities()
