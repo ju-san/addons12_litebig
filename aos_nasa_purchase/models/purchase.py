@@ -69,9 +69,9 @@ class PurchaseOrder(models.Model):
             return
         for order in self:
             for line in order.order_line:
-                line.location_id = self.warehouse_id.lot_stock_id.id
-                line.virtual_available = line.with_context(location=line.location_id)._compute_quantities()
-                line.range_qty = line._compute_range_message()
+                line.location_id = self.sudo().warehouse_id.lot_stock_id.id
+                line.virtual_available = line.sudo().with_context(location=line.location_id)._compute_quantities()
+                line.range_qty = line.sudo().with_context(virtual_available=line.virtual_available)._compute_range_message()
         
 class PurchaseOrderLine(models.Model): 
     _inherit = 'purchase.order.line'
@@ -98,26 +98,30 @@ class PurchaseOrderLine(models.Model):
         #min = formatLang(self.env, min, currency_obj=False)
         #max = formatLang(self.env, max, currency_obj=False)
         #{'value':{'operation':typeseller}}
+        if self._context.get('virtual_available'):
+            virtual_available = self._context.get('virtual_available')
+        else:
+            virtual_available = self.virtual_available
         operation = 'Indent'
         range_available = 0.0
         max_range = {'1': 1000, '2':10000, '3':100000, '4':1000000}
         i = 1
         for max in [1000, 10000, 100000, 1000000]:
-            if self.virtual_available <= 0.0:
+            if virtual_available <= 0.0:
                 range_available = max_range[str(i)]
                 operation = 'Indent'
                 break
-            elif self.virtual_available > 0.0 and self.virtual_available < max:
+            elif virtual_available > 0.0 and virtual_available < max:
                 #print ('===max==',max,str(i))
                 range_available = max_range[str(i)]
                 operation = '<'
                 break
-            elif self.virtual_available >= max_range['4']:
+            elif virtual_available >= max_range['4']:
                 range_available = max_range['4']
                 operation = '>='
                 #break
             i+=1
-        #print ('===virtual_available===',operation,self.virtual_available,range_available)
+        print ('===virtual_available===',operation,self.virtual_available,virtual_available,range_available)
         message_dict = {
             'operation':  _('%s') % (operation),
             'range_available': _('%s') % (int(range_available)),
@@ -319,7 +323,8 @@ class PurchaseOrderLine(models.Model):
         self.location_id = self.sudo()._compute_locations()#self.order_id.warehouse_id.lot_stock_id.id
         #print ('===self.location_id===',self.location_id)
         self.virtual_available = self.sudo().with_context(location=self.location_id)._compute_quantities()
-        self.range_qty = self.sudo()._compute_range_message()
+        #print ('---sss--',self.virtual_available)
+        self.range_qty = self.sudo().with_context(virtual_available=self.virtual_available)._compute_range_message()
         self._compute_tax_id()
 
         self._suggest_quantity()
