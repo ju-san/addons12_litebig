@@ -100,20 +100,19 @@ class PurchaseOrderLine(models.Model):
         #{'value':{'operation':typeseller}}
         operation = 'Indent'
         range_available = 0.0
-        virtual_available = self.sudo().with_context(location=self.location_id)._compute_quantities()
         max_range = {'1': 1000, '2':10000, '3':100000, '4':1000000}
         i = 1
         for max in [1000, 10000, 100000, 1000000]:
-            if virtual_available <= 0.0:
+            if self.virtual_available <= 0.0:
                 range_available = max_range[str(i)]
                 operation = 'Indent'
                 break
-            elif virtual_available > 0.0 and virtual_available < max:
+            elif self.virtual_available > 0.0 and self.virtual_available < max:
                 #print ('===max==',max,str(i))
                 range_available = max_range[str(i)]
                 operation = '<'
                 break
-            elif virtual_available >= max_range['4']:
+            elif self.virtual_available >= max_range['4']:
                 range_available = max_range['4']
                 operation = '>='
                 #break
