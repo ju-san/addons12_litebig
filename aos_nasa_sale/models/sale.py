@@ -104,7 +104,7 @@ class SaleOrder(models.Model):
         super(SaleOrder, self).onchange_partner_id()
         self.partner_category_id = self.partner_id.category_id and self.partner_id.category_id.id or False
         #self.partner_group_id = self.partner_id.partner_group_id and self.partner_id.partner_group_id.id or False
-        self.pricelist_id = False
+        #self.pricelist_id = False
         
     @api.multi
     def _prepare_invoice(self):
