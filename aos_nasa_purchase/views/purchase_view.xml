@@ -72,7 +72,7 @@
                 	<field name="show_range" invisible="1"/>
                 </xpath>
 	            <xpath expr="//group/group[1]/field[@name='partner_ref']" position="after">
-	            	<field name="company_id" string="SC/Stockist/Mitra Usaha" options="{'no_create': True}"/>
+	            	<field name="company_id" string="Pemesan" options="{'no_create': True}"/>
 	            	<field name="customer_ref"/>
 	            	<field name="warehouse_id" string="Kode Gudang" options="{'no_create': True}"/>
             		<field name="pilih_alamat"/>
