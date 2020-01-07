@@ -122,7 +122,7 @@ class PurchaseOrderLine(models.Model):
                 operation = '>='
                 #break
             i+=1
-        print ('===virtual_available===',operation,self.virtual_available,virtual_available,range_available)
+        #print ('===virtual_available===',operation,self.virtual_available,virtual_available,range_available)
         message_dict = {
             'operation':  _('%s') % (operation),
             'range_available': _('%s') % (int(range_available)),
@@ -135,8 +135,7 @@ class PurchaseOrderLine(models.Model):
     #warehouse_id.lot_stock_id
                     #print ('==_compute_quantities=',location_id,move.virtual_available)
     
-    warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse',
-        required=True)
+    warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse', required=True)
     location_id = fields.Many2one(
         'stock.location', 'Location', compute_sudo=True, required=False,
         help="Sets a location if you produce at a fixed location. This can be a partner location if you subcontract the manufacturing operations.")

@@ -16,6 +16,9 @@
 	            <xpath expr="//button[@name='action_quotation_send' and @states='sent,sale']" position="after">
 					<button name="action_sale_order_send" string="Send by Email" type="object" states="sale"/>
 	            </xpath> -->
+	            <xpath expr="//group[@name='sale_pay']/field[@name='invoice_status']" position="after">
+	            	<field name="payment_status"/>
+	            </xpath>
 	            <div name="button_box" position="inside">
                     <button name="toggle_active" type="object"
                             class="oe_stat_button" icon="fa-archive">
@@ -28,8 +31,8 @@
 	            	<field name="saldo_stockist"/>
 	            </field>
 	            <field name="pricelist_id" position="before">
-	            	<field name="partner_category_id" options="{'no_create': True, 'no_open': True}"/>
-	            	<field name="partner_group_id" required="1" options="{'no_create': True, 'no_open': True}"/>
+	            	<field name="partner_category_id" groups="base.group_no_one" options="{'no_create': True, 'no_open': True}"/>
+	            	<field name="partner_group_id" options="{'no_create': True, 'no_open': True}"/>
 	            </field>
 	            <field name="pricelist_id" position="attributes">
 	            	<attribute name="domain">[('partner_group_id','=',partner_group_id)]</attribute>

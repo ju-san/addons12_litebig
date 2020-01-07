@@ -43,6 +43,39 @@ class SaleOrder(models.Model):
     def _compute_point(self):
         self.point_amount_total = sum([line.point_total for line in self.order_line])
     
+    @api.depends('state', 'order_line.invoice_status', 'order_line.invoice_lines', 'invoice_ids.state')
+    def _get_payment(self):
+        for order in self:
+            payment_ids = self.env['account.payment'].sudo().search([('payment_type','in',('inbound','outbound'))])
+                
+            line_invoice_status = order.invoice_ids.filtered(lambda i: i.state in ('draft','open','paid'))
+            #print ('====line_invoice_status===',line_invoice_status)
+            if order.state not in ('sale', 'done'):
+                payment_status = 'no'
+            elif all(invoice_status.state != 'paid' for invoice_status in line_invoice_status):
+                payment_status = 'unpaid'
+            elif all(invoice_status.state == 'paid' for invoice_status in line_invoice_status):
+                payment_status = 'paid'
+            elif any(invoice_status.state == 'paid' for invoice_status in line_invoice_status):
+                payment_status = 'partial_paid'
+            else:
+                payment_status = 'no'
+            order.update({
+                'payment_count': len(set(payment_ids.ids)),
+                'payment_ids': payment_ids.ids,
+                'payment_status': payment_status,
+            })
+    
+    payment_count = fields.Integer(string='# of Payment', compute='_get_payment', readonly=True)
+    payment_ids = fields.Many2many("account.payment", string='Payments', compute="_get_payment", readonly=True, store=True, copy=False)
+    
+    payment_status = fields.Selection([
+        ('no', 'Nothing to be Paid'),
+        ('partial_paid', 'Partially Paid'),
+        ('paid', 'Fully Paid'),
+        ('unpaid', 'Order Unpaid')
+        ], string='Payment Status', compute='_get_payment', store=True, readonly=True)
+    
     active = fields.Boolean(
         'Active', default=True,
         help="If unchecked, it will allow you to hide the sale order without removing it.") 

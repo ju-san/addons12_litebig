@@ -106,6 +106,13 @@
 				<field name="ref" position="before">
 					<field name="employee"/>
 				</field>
+				<field name="company_id" position="after">
+					<field name="company_ids">
+						<tree>
+							<field name="name"/>
+						</tree>
+					</field>
+				</field>
 				<page autofocus="autofocus" position="attributes">
 					<attribute name="attrs">{'invisible': [('company_type','=','person')]}</attribute>
 				</page>

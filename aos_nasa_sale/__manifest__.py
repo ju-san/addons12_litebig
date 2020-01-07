@@ -42,6 +42,7 @@ Module based on Alphasoft
             'views/sale_view.xml',
             'views/invoice_view.xml',
             'views/payment_view.xml',
+            'views/stock_view.xml',
      ],
     'css': [],
     'js': [],

@@ -51,6 +51,8 @@
 	            <xpath expr="//group/group[1]/field[@name='partner_id']" position="attributes">
 	            	<attribute name="string">Penyedia</attribute>
 	            	<attribute name="domain">[('supplier','=',True),'|',('company_id','=',company_id),('company_id','=',False)]</attribute>
+	            	<attribute name="context">{'search_default_supplier':1, 'default_supplier':1, 'default_customer':0, 'show_vat': True, 'default_company_ids': True}</attribute>
+                	<attribute name="options">{'no_create': True}</attribute>
                 </xpath>
 	            <xpath expr="//group/group[1]/field[@name='partner_ref']" position="attributes">
 	            	<attribute name="invisible">1</attribute>
@@ -60,7 +62,7 @@
 	            	<attribute name="string">Nomor PO</attribute>
                 </xpath>
                 <xpath expr="//group/group[2]/field[@name='origin']" position="after">
-                	<field name="partner_category_id" options="{'no_create': True, 'no_open': True}"/>
+                	<field name="partner_category_id" groups="base.group_no_one" options="{'no_create': True, 'no_open': True}"/>
                 	<field name="partner_group_id" options="{'no_create': True, 'no_open': True}"/>
                 	<field name="pricelist_id" domain="[('partner_group_id','=',partner_group_id)]" options="{'no_create': True, 'no_open': True}"/>
                 </xpath>

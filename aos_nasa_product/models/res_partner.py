@@ -7,7 +7,7 @@ from odoo.addons.base.models.res_partner import WARNING_MESSAGE, WARNING_HELP
 
 class PricelistGroup(models.Model):
     _name = "product.pricelist.group"
-    _description = 'Pricelist User'
+    _description = 'Pricelist Group User'
     
     name = fields.Char('Pricelist User', required=True, translate=True)
     
