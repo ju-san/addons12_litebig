@@ -52,6 +52,9 @@
 	        	<field name="origin" position="after">
               		<field name="is_return"/>
                 </field>
+                <xpath expr="//field[@name='move_line_ids_without_package']/tree/field[@name='lot_id']" position="before">
+                	<field name="group_lot_id"/>
+                </xpath>
 	        </field>
 	    </record>
 	    
