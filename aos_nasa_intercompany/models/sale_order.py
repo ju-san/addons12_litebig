@@ -84,6 +84,8 @@ class SaleOrder(models.Model):
             picking_type_id = PurchaseOrder.sudo(intercompany_uid)._default_picking_type()
         res = {
             'name': self.env['ir.sequence'].sudo().next_by_code('purchase.order'),
+            'pilih_alamat': self.pilih_alamat,
+            'street': self.street,
             'origin': self.name,
             'partner_id': company_partner.id,
             'picking_type_id': picking_type_id.id,

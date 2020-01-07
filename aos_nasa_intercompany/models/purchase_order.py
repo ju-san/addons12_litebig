@@ -93,6 +93,8 @@ class PurchaseOrder(models.Model):
         return {
             'name': self.env['ir.sequence'].sudo().next_by_code('sale.order') or '/',
             'company_id': company.id,
+            'pilih_alamat': self.pilih_alamat,
+            'street': self.street,
             'warehouse_id': warehouse.id,
             'client_order_ref': name,
             'partner_id': partner.id,
