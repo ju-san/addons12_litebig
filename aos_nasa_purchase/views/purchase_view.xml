@@ -59,7 +59,7 @@
                 </xpath>
 	            <xpath expr="//group/group[2]/field[@name='origin']" position="attributes">
 	            	<attribute name="attrs">{}</attribute>
-	            	<attribute name="string">Nomor PO</attribute>
+	            	<attribute name="string">Nomor SO</attribute>
                 </xpath>
 	            <xpath expr="//group/group[2]/field[@name='origin']" position="after">
 	            	<field name="payment_method"/>
