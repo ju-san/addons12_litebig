@@ -9,7 +9,7 @@
 				<xpath expr="//page[@name='purchase_delivery_invoice']/group/group[1]" position="inside">
 					<field name="auto_generated" readonly="1"/>
 					<field name="auto_sale_order_id" readonly="0"/>
-					<field name="partner_ref"/>
+					<field name="partner_ref" string="Nomor SO"/>
 				</xpath>
 			</field>
 		</record>
