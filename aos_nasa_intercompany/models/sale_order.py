@@ -57,6 +57,8 @@ class SaleOrder(models.Model):
         # write customer reference field on SO
         if not self.client_order_ref:
             self.client_order_ref = purchase_order.name
+        if purchase_order:
+            self.write({'auto_purchase_order_id': purchase_order.id})
 
         # auto-validate the purchase order if needed
         if company.auto_validation == 'validated':

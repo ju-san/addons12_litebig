@@ -7,8 +7,8 @@
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
                 <field name="origin" position="after">
-					<field name="auto_generated" readonly="1" />
-					<field name="auto_purchase_order_id" readonly="1" />
+					<field name="auto_generated" readonly="1"/>
+					<field name="auto_purchase_order_id" readonly="0"/>
 				</field>
             </field>
         </record>

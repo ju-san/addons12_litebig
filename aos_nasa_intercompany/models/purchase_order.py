@@ -69,7 +69,8 @@ class PurchaseOrder(models.Model):
         # write vendor reference field on PO
         if not self.partner_ref:
             self.partner_ref = sale_order.name
-
+        if sale_order:
+            self.write({'auto_sale_order_id': sale_order.id})
         #Validation of sales order
         #if company.auto_validation == 'validated':
         #    sale_order.sudo(intercompany_uid).action_confirm()
@@ -108,6 +109,7 @@ class PurchaseOrder(models.Model):
             'user_id': False,
             'auto_generated': True,
             'auto_purchase_order_id': self.id,
+            #'auto_sale_order_id': self.id,
             'partner_shipping_id': direct_delivery_address or partner_addr['delivery']
         }
 
