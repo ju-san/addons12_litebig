@@ -75,7 +75,7 @@
 						<label for="apakah_promo"/>
 	                    <field name="apakah_promo" class="oe_inline"/>
 	                </div>
-					<div>
+					<!-- <div>
 						<label for="barang_dikirim"/>
 	                    <field name="barang_dikirim" class="oe_inline"/>
 	                </div>
@@ -83,7 +83,7 @@
 						<label for="barang_dikirim_kesub"/>
 	                    <field name="barang_dikirim_kesub" class="oe_inline"/>
 	                </div>
-	                <newline/>
+	                <newline/> -->
              	</xpath>
 	            <!-- <field name="company_id" position="after">
 	            	<field name="picking_create"/>
