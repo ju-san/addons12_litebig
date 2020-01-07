@@ -61,6 +61,9 @@
 	            	<attribute name="attrs">{}</attribute>
 	            	<attribute name="string">Nomor PO</attribute>
                 </xpath>
+	            <xpath expr="//group/group[2]/field[@name='origin']" position="after">
+	            	<field name="payment_method"/>
+                </xpath>
                 <xpath expr="//group/group[2]/field[@name='origin']" position="after">
                 	<field name="partner_category_id" groups="base.group_no_one" options="{'no_create': True, 'no_open': True}"/>
                 	<field name="partner_group_id" options="{'no_create': True, 'no_open': True}"/>
