@@ -87,7 +87,8 @@ class PurchaseOrder(models.Model):
             self.currency_id = self.partner_id.property_purchase_currency_id.id or self.env.user.company_id.currency_id.id
         self.partner_group_id = self.company_id.partner_group_ids and self.company_id.partner_group_ids[0].id
         self.pricelist_id = self.company_id.pricelist_ids and self.company_id.pricelist_ids[0].id
-        self.partner_id = self.company_id.purchase_partner_id and self.company_id.purchase_partner_id.id
+        #if self.company_id.purchase_partner_id:
+        #    self.partner_id = self.company_id.purchase_partner_id and self.company_id.purchase_partner_id.id
             
         return {}
     
