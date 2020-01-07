@@ -16,6 +16,8 @@ This module is aim to add standard partner & company for Adaa
     'depends' : ['base',
                  'mail',
                  'contacts', 
+                 'aos_users_tags',
+                 'aos_nasa_product',
                  #'efaktur',
                  #'web_google_maps',
                  ],

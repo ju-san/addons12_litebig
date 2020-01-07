@@ -65,6 +65,7 @@
                 	<field name="partner_category_id" groups="base.group_no_one" options="{'no_create': True, 'no_open': True}"/>
                 	<field name="partner_group_id" options="{'no_create': True, 'no_open': True}"/>
                 	<field name="pricelist_id" domain="[('partner_group_id','=',partner_group_id)]" options="{'no_create': True, 'no_open': True}"/>
+                	<field name="show_range"/>
                 </xpath>
 	            <xpath expr="//group/group[1]/field[@name='partner_ref']" position="after">
 	            	<field name="company_id" string="SC/Stockist/Mitra Usaha" options="{'no_create': True}"/>
@@ -87,7 +88,7 @@
 	            	<field name="warehouse_id" invisible="1"/>
 	                <field name="location_id" domain="[('usage','=','internal')]" invisible="1"/>
 	                <field name="virtual_available" groups="base.group_no_one"/>
-	                <field name="range_qty"/>
+	                <field name="range_qty" attrs="{'column_invisible': [('parent.show_range', '=', False)]}"/>
 	            </xpath>
 	            <xpath expr="//field[@name='order_line']/tree/field[@name='qty_invoiced']" position="attributes">
 	            	<attribute name="invisible">1</attribute>

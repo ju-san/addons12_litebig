@@ -42,6 +42,7 @@ class PurchaseOrder(models.Model):
     active = fields.Boolean(
         'Active', default=True,
         help="If unchecked, it will allow you to hide the purchase order without removing it.") 
+    show_range = fields.Boolean('Show Range', related='partner_id.show_range', store=True)
     customer_ref = fields.Char('Nama Mitra Usaha', related='company_id.partner_id.customer_ref')
     pilih_alamat = fields.Selection([('sama','Alamat sesuai data'),('baru','Alamat baru')], string='Pilih Alamat', default='sama')
     street = fields.Text('Alamat Manual')

@@ -22,6 +22,7 @@ class Pricelist(models.Model):
 class Partner(models.Model):
     _inherit = 'res.partner'
     
+    show_range = fields.Boolean('Show Range')
     partner_group_id = fields.Many2one('product.pricelist.group', string="Pricelist User")
     property_stock_warehouse_id = fields.Many2one(
         'stock.warehouse', string="Warehouse Location",

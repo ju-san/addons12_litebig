@@ -107,11 +107,7 @@
 					<field name="employee"/>
 				</field>
 				<field name="company_id" position="after">
-					<field name="company_ids">
-						<tree>
-							<field name="name"/>
-						</tree>
-					</field>
+					<field name="company_tags" widget="many2many_tags"/>
 				</field>
 				<page autofocus="autofocus" position="attributes">
 					<attribute name="attrs">{'invisible': [('company_type','=','person')]}</attribute>

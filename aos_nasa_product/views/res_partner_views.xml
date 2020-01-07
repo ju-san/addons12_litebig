@@ -58,6 +58,7 @@
             <field name="arch" type="xml"> 
                 <xpath expr="//group/field[@name='customer']" position="after">
                     <field name="partner_group_id"/>
+                    <field name="show_range"/>
                 </xpath>
             </field>
         </record>

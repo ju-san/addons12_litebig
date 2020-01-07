@@ -2,17 +2,21 @@
 <odoo>
 	<data>
 		
-		<!-- <record id="view_company_form_aos_partner" model="ir.ui.view">
+		<record id="view_company_form_aos_partner" model="ir.ui.view">
         	<field name="name">res.company.custom</field>
 			<field name="model">res.company</field>
 			<field name="inherit_id" ref="base.view_company_form" />
 			<field name="arch" type="xml">
-				<xpath expr="//div/h1/field[@name='name']" position="after">
+				<!-- <xpath expr="//div/h1/field[@name='name']" position="after">
 					<label for="-"/>
 					<field name="alias" class="oe_inline" placeholder="Alias or Nickname"/>
-				</xpath>
+				</xpath> -->
+				<field name="company_registry" position="after">
+					<field name="company_tags" widget="many2many_tags" placeholder="Tags"/>
+					<field name="partner_group_ids" widget="many2many_tags" placeholder="Pricelist Tags"/>					
+				</field>
 			</field>
-		</record> -->
+		</record>
 		
 	</data>
 </odoo>

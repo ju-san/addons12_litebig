@@ -119,6 +119,8 @@ class ResPartner(models.Model):
     check_tdp = fields.Boolean('Check TDP', help='Check Tanda Daftar Perusahaan')
     check_akta = fields.Boolean('Check Akta Pendirian', help='Check Akta Pendirian Perusahaan')
     company_ids = fields.Many2many('res.company', string='Companies')
+    company_tags = fields.Many2many('res.users.category', string='Companies Tags')
+    #partner_group_ids = fields.Many2many('product.pricelist.group', string="Pricelist User")
     #===========================================================================
     state = fields.Selection([('draft','Draft'),
                               ('validate','Validate'),
@@ -141,10 +143,10 @@ class ResPartner(models.Model):
     def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
         #restricted_customer = self.env.user.has_group('sales_person_customer_access.group_restricted_customer')
         #user_obj = self.env['res.users']
-        #print ('---s----',self._context.get('default_company_ids'))
+        #print ('---s----',self._context.get('default_company_ids'),self.company_tags.ids)
         if self._context.get('default_company_ids'):
             #if restricted_customer:
-            args = [('company_ids','in',self.env.user.company_id.id)] + list(args)
+            args = [('company_tags','in',self.env.user.company_id.company_tags.ids)] + list(args)
         return super(ResPartner, self)._search(args, offset, limit, order, count, access_rights_uid)
             
     @api.model
