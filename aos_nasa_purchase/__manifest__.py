@@ -38,8 +38,11 @@ Module based on Alphasoft
     'test': [],
     'data': [
             'report/report_view.xml',
+            'security/ir.model.access.csv',
             'views/purchase_view.xml',
             'views/picking_view.xml',
+            'views/stock_production_lot_views.xml',
+            'data/stock_sequence_data.xml',
      ],
     'css': [],
     'js': [],

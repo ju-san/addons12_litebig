@@ -97,6 +97,7 @@ class PurchaseOrder(models.Model):
             'client_order_ref': name,
             'partner_id': partner.id,
             'partner_category_id': self.partner_category_id.id,
+            'partner_group_id': self.partner_group_id.id,
             'pricelist_id': self.pricelist_id.id,
             'partner_invoice_id': partner_addr['invoice'],
             'date_order': self.date_order,

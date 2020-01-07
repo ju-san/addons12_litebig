@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_production_lot_group_form" model="ir.ui.view">
+        <field name="name">stock.production.lot.group.form</field>
+        <field name="model">stock.production.lot.group</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <form string="Group Lots/Serial Numbers">
+                <sheet>
+	                <div class="oe_title">
+	                    <label for="name" class="oe_edit_only"/>
+	                    <h1>
+	                        <field name="name" placeholder="e.g. A1/LOT/0001/20121"/>
+	                    </h1>
+	                </div>
+	                <group name="main_group">
+	                    <group>
+	                        <field name="ref"/>
+	                        <field name="lot_ids"/>
+	                    </group>
+	                </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_production_lot_group_tree" model="ir.ui.view">
+        <field name="name">stock.production.lot.group.tree</field>
+        <field name="model">stock.production.lot.group</field>
+        <field name="arch" type="xml">
+            <tree string="Group Lots/Serial Numbers">
+                <field name="name"/>
+                <field name="ref"/>
+                <field name="create_date"/>
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="search_product_lot_group_filter">
+        <field name="name">Production Lots Group Filter</field>
+        <field name="model">stock.production.lot.group</field>
+        <field name="arch" type="xml">
+            <search string="Product Lots Filter">
+                <field name="name" string="Group Product Lots" filter_domain="['|',('name','ilike',self),('ref','ilike',self)]"/>
+                <field name="lot_ids"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_production_lot_group_form" model="ir.actions.act_window">
+        <field name="name">Groups Lots/SN</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">stock.production.lot.group</field>
+        <field name="view_ids"
+                   eval="[(5, 0, 0),
+                          (0, 0, {'view_mode': 'tree', 'view_id': ref('view_production_lot_group_tree')}),
+                          (0, 0, {'view_mode': 'form', 'view_id': ref('view_production_lot_group_form')})]"/>
+        <field name="search_view_id" ref="search_product_lot_group_filter"/>
+        <field name="context">{'search_default_group_by_product': 1}</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Add a lot/serial number
+          </p><p>
+            This is the list of all the production lots you recorded. When
+            you select a lot, you can get the traceability of the products contained in lot.
+          </p>
+        </field>
+    </record>
+    <menuitem action="action_production_lot_group_form" id="menu_action_production_lot_group_form"
+        parent="stock.menu_stock_inventory_control" groups="stock.group_production_lot"
+        sequence="100"/>
+        
+   <record id="stock.action_production_lot_form" model="ir.actions.act_window">
+        <field name="name">Lots/SN</field>
+    </record>
+    
+    <record id="view_production_lot_form_inherit" model="ir.ui.view">
+        <field name="name">stock.production.lot.form</field>
+        <field name="model">stock.production.lot</field>
+        <field name="inherit_id" ref="stock.view_production_lot_form"/>
+        <field name="arch" type="xml">
+            <field name="ref" position="after">
+               <field name="group_id"/>
+            </field>
+        </field>
+    </record>
+    
+    
+    <record id="view_production_lot_tree_inherit" model="ir.ui.view">
+        <field name="name">stock.production.lot.form</field>
+        <field name="model">stock.production.lot</field>
+        <field name="inherit_id" ref="stock.view_production_lot_tree"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+               <field name="group_id"/>
+            </field>
+        </field>
+    </record>
+    
+    <record id="search_product_lot_filter_inherit" model="ir.ui.view">
+        <field name="name">stock.production.lot.form</field>
+        <field name="model">stock.production.lot</field>
+        <field name="inherit_id" ref="stock.search_product_lot_filter"/>
+        <field name="arch" type="xml">
+            <field name="product_id" position="after">
+               <field name="group_id"/>
+            </field>
+            <filter name="group_by_product" position="after">
+                <filter name="group_by_lot" string="Group" domain="[]" context="{'group_by':'group_id'}"/>
+            </filter>
+        </field>
+    </record>
+    
+</odoo>

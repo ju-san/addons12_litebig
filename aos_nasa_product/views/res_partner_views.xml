@@ -9,6 +9,7 @@
             <field name="arch" type="xml">
                 <field name="name" string="after">
                     <field name="partner_category_id"/>
+                    <field name="partner_group_id"/>
                 </field>
             </field>
         </record>
@@ -21,6 +22,7 @@
             <field name="arch" type="xml">
                 <field name="name" string="after">
                     <field name="partner_category_id"/>
+                    <field name="partner_group_id"/>
                 </field>
             </field>
         </record>
@@ -33,6 +35,7 @@
             <field name="arch" type="xml">
                 <field name="company_id" string="after">
                     <field name="partner_category_id"/>
+                    <field name="partner_group_id"/>
                 </field>
             </field>
         </record>
@@ -47,6 +50,17 @@
 	            </field>
 	        </field>
 	    </record>
+	    
+	    <record id="view_partner_property_form" model="ir.ui.view">
+            <field name="name">res.partner.product.pricelist</field>
+            <field name="model">res.partner</field>
+	        <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml"> 
+                <xpath expr="//group/field[@name='customer']" position="after">
+                    <field name="partner_group_id"/>
+                </xpath>
+            </field>
+        </record>
 
   </data>
 </odoo>

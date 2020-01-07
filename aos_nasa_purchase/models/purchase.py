@@ -47,12 +47,13 @@ class PurchaseOrder(models.Model):
     street = fields.Text('Alamat Manual')
     #wh_picking_type_id = fields.Many2one('stock.warehouse', 'Deliver To', states=Purchase.READONLY_STATES, required=True,help="This will determine operation type of incoming shipment")
     warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse',
-        required=True)#, states=Purchase.READONLY_STATES)
+        required=True, states=Purchase.READONLY_STATES)
     company_address_id = fields.Many2one('res.partner', related='company_id.partner_id', string='Alamat',
         help="Put an address if you want to deliver directly from the vendor to the customer. "
              "Otherwise, keep empty to deliver to your own company.")
     point_amount_total = fields.Monetary(string='Total BV', compute='_compute_point', store=True)
-    partner_category_id = fields.Many2one('res.partner.category', string="Pricelist User", required=True, states=READONLY_STATES)
+    partner_category_id = fields.Many2one('res.partner.category', string="Partner Tags", required=True, states=READONLY_STATES)
+    partner_group_id = fields.Many2one('product.pricelist.group', string="Pricelist User", required=True, states=READONLY_STATES)
     pricelist_id = fields.Many2one('product.pricelist', string='Pricelist Wilayah', required=True, states=READONLY_STATES, help="Pricelist for current sales order.")
     
     @api.onchange('pilih_alamat')

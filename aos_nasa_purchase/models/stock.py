@@ -46,3 +46,23 @@ class StockMoveLine(models.Model):
     display_location_dest_id = fields.Char('To', compute='_compute_display_location', store=False)
     group_id = fields.Char('Reference SO/PO', compute='_compute_display_location', store=False)
     #reference = fields.Char(string='Reference Warehouse', related='move_id.reference', store=True, related_sudo=False, readonly=False)
+    
+    
+class StockProductionLotGroup(models.Model):
+    _name = 'stock.production.lot.group'
+    _inherit = ['mail.thread','mail.activity.mixin']
+    _description = 'SN Group'
+    
+    name = fields.Char(
+        'Group Lot/Serial Number', default=lambda self: self.env['ir.sequence'].next_by_code('stock.lot.group.serial'),
+        required=True, help="Group Unique Lot/Serial Number")
+    ref = fields.Char('Internal Reference', help="Internal reference number in case it differs from the manufacturer's lot/serial number")
+    lot_ids = fields.One2many('stock.production.lot', 'group_id', 'Lots', readonly=True)
+    
+    _sql_constraints = [
+        ('name_ref_uniq', 'unique (name)', 'The group of serial number must be unique !'),
+    ]
+class StockProductionLot(models.Model):
+    _inherit = 'stock.production.lot'
+    
+    group_id = fields.Many2one('stock.production.lot.group', string='Group SN')
