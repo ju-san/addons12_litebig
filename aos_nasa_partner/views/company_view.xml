@@ -11,10 +11,21 @@
 					<label for="-"/>
 					<field name="alias" class="oe_inline" placeholder="Alias or Nickname"/>
 				</xpath> -->
-				<field name="company_registry" position="after">
+				<!-- <field name="company_registry" position="after">
 					<field name="company_tags" widget="many2many_tags" placeholder="Tags"/>
 					<field name="partner_group_ids" widget="many2many_tags" placeholder="Pricelist Tags"/>					
-				</field>
+				</field> -->
+				<xpath expr="//notebook/page[1]" position="after">
+					<page string="Setup Company">
+						<group>
+							<field name="company_tags" widget="many2many_tags" placeholder="Tags"/>
+							<field name="partner_group_ids" widget="many2many_tags" placeholder="Pricelist Users"/>
+							<field name="pricelist_ids" domain="[('partner_group_id','in',partner_group_ids)]" widget="many2many_tags" placeholder="Pricelist Wilayah"/>
+                			<field name="sale_partner_id" domain="[('customer','=',True)]"/>
+                			<field name="purchase_partner_id" domain="[('supplier','=',True)]"/>
+                		</group>
+                	</page>
+                </xpath>
 			</field>
 		</record>
 		

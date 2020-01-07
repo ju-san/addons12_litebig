@@ -15,5 +15,7 @@ class ResCompany(models.Model):
     title_shortcut = fields.Char(related='partner_id.title.shortcut', string="Title Shortcut", readonly=True)
     company_tags = fields.Many2many('res.users.category', string='Companies Tags')
     partner_group_ids = fields.Many2many('product.pricelist.group', string="Pricelist User")
-    
+    pricelist_ids = fields.Many2many('product.pricelist', string="Pricelist Wilayah")
+    sale_partner_id = fields.Many2one('res.partner', string="Default Sale Partner")
+    purchase_partner_id = fields.Many2one('res.partner', string="Default Purchase Partner")
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

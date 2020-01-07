@@ -9,6 +9,8 @@ class ResCompany(models.Model):
            help="Responsible user for creation of documents triggered by intercompany rules.")    
     sale_journal = fields.Many2one('account.journal', string="Sale Journal")
     purchase_journal = fields.Many2one('account.journal', string="Purchase Journal")
+    #sale_partner_id = fields.Many2one('res.partner', string="Default Sale Partner")
+    #purchase_partner_id = fields.Many2one('res.partner', string="Default Purchase Partner")
     auto_validation = fields.Selection([('draft', 'draft'), ('validated', 'validated')])
     warehouse_id = fields.Many2one("stock.warehouse", string="Warehouse",
         help="Default value to set on Purchase(Sales) Orders that will be created based on Sale(Purchase) Orders made to this company")
