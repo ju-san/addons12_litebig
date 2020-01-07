@@ -85,8 +85,8 @@ class PurchaseOrder(models.Model):
             self.fiscal_position_id = self.env['account.fiscal.position'].with_context(company_id=self.company_id.id).get_fiscal_position(self.partner_id.id)
             self.payment_term_id = self.partner_id.property_supplier_payment_term_id.id
             self.currency_id = self.partner_id.property_purchase_currency_id.id or self.env.user.company_id.currency_id.id
-        self.partner_group_id = self.company_id.partner_group_ids and self.company_id.partner_group_ids.id
-        self.pricelist_id = self.company_id.pricelist_ids and self.company_id.pricelist_ids.id
+        self.partner_group_id = self.company_id.partner_group_ids and self.company_id.partner_group_ids[0].id
+        self.pricelist_id = self.company_id.pricelist_ids and self.company_id.pricelist_ids[0].id
         self.partner_id = self.company_id.purchase_partner_id and self.company_id.purchase_partner_id.id
             
         return {}
