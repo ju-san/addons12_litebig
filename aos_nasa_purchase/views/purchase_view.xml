@@ -88,7 +88,7 @@
 	            	<field name="warehouse_id" invisible="1"/>
 	                <field name="location_id" domain="[('usage','=','internal')]" invisible="1"/>
 	                <field name="virtual_available" groups="base.group_no_one"/>
-	                <field name="range_qty" attrs="{'column_invisible': [('parent.show_range', '=', False)]}"/>
+	                <field name="range_qty" attrs="{'column_invisible': [('parent.show_range', '=', True)]}"/>
 	            </xpath>
 	            <xpath expr="//field[@name='order_line']/tree/field[@name='qty_invoiced']" position="attributes">
 	            	<attribute name="invisible">1</attribute>
