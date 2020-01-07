@@ -52,7 +52,7 @@ class PurchaseOrder(models.Model):
         help="Put an address if you want to deliver directly from the vendor to the customer. "
              "Otherwise, keep empty to deliver to your own company.")
     point_amount_total = fields.Monetary(string='Total BV', compute='_compute_point', store=True)
-    partner_category_id = fields.Many2one('res.partner.category', string="Partner Tags", required=True, states=READONLY_STATES)
+    partner_category_id = fields.Many2one('res.partner.category', string="Partner Tags", required=False, states=READONLY_STATES)
     partner_group_id = fields.Many2one('product.pricelist.group', string="Pricelist User", required=True, states=READONLY_STATES)
     pricelist_id = fields.Many2one('product.pricelist', string='Pricelist Wilayah', required=True, states=READONLY_STATES, help="Pricelist for current sales order.")
     

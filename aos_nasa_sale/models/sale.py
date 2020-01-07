@@ -49,7 +49,7 @@ class SaleOrder(models.Model):
     partner_id = fields.Many2one('res.partner', string='ST/SC/Distributor', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, required=True, change_default=True, index=True, track_visibility='always', track_sequence=1, help="You can find a customer by its Name, TIN, Email or Internal Reference.")
     partner_invoice_id = fields.Many2one('res.partner', string='Alamat Tagihan', readonly=True, required=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)], 'sale': [('readonly', False)]}, help="Invoice address for current sales order.")
     partner_shipping_id = fields.Many2one('res.partner', string='Alamat Pengiriman', readonly=True, required=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)], 'sale': [('readonly', False)]}, help="Delivery address for current sales order.")
-    partner_category_id = fields.Many2one('res.partner.category', string="Partner Tags", required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]})
+    partner_category_id = fields.Many2one('res.partner.category', string="Partner Tags", required=False, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]})
     pilih_alamat = fields.Selection([('sama','Alamat sesuai data'),('baru','Alamat baru')], string='Pilih Alamat', default='sama')
     street = fields.Text('Alamat Manual')
     partner_group_id = fields.Many2one('product.pricelist.group', string="Pricelist User", required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]})

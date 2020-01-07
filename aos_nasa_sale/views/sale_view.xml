@@ -28,7 +28,7 @@
 	            	<field name="saldo_stockist"/>
 	            </field>
 	            <field name="pricelist_id" position="before">
-	            	<field name="partner_category_id" required="1" options="{'no_create': True, 'no_open': True}"/>
+	            	<field name="partner_category_id" options="{'no_create': True, 'no_open': True}"/>
 	            	<field name="partner_group_id" required="1" options="{'no_create': True, 'no_open': True}"/>
 	            </field>
 	            <field name="pricelist_id" position="attributes">
