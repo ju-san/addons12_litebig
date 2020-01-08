@@ -22,7 +22,7 @@
 	            <field name="origin" position="after">
 	            	<field name="sale_id" invisible="1"/>
 	            	<!-- <field name="order_policy" attrs="{'invisible': ['|',('picking_type_code', '=', 'internal'),('sale_id','=',False)]}"/> -->
-	            	<field name="payment_status" attrs="{'invisible': ['|',('picking_type_code', '=', 'internal'),('sale_id','=',False)]}"/>
+	            	<!-- <field name="payment_status" attrs="{'invisible': ['|',('picking_type_code', '=', 'internal'),('sale_id','=',False)]}"/> -->
                 </field>
 	        </field>
 	    </record>

@@ -9,26 +9,26 @@ from odoo.osv import expression
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
     
-    @api.depends('sale_id', 'sale_id.payment_status', 'sale_id.faktur_sementara')
-    def _get_payment_status(self):
-        for picking in self:
-            payment_status = picking.sale_id.payment_status
-            if picking.sale_id.faktur_sementara or payment_status == 'paid':
-                is_locked = True
-            else:
-                is_locked = False
-            print ('===is_locked===',picking,is_locked,picking.sale_id.faktur_sementara)
-            picking.update({
-                'payment_status': payment_status,
-                'is_locked': is_locked,
-            })
-             
-    payment_status = fields.Selection([
-        ('no', 'Nothing to be Paid'),
-        ('partial_paid', 'Partially Paid'),
-        ('paid', 'Fully Paid'),
-        ('unpaid', 'Order Unpaid')
-        ], string='Payment Status', compute='_get_payment_status', store=True, readonly=True)
+#     @api.depends('sale_id', 'sale_id.payment_status', 'sale_id.faktur_sementara')
+#     def _get_payment_status(self):
+#         for picking in self:
+#             payment_status = picking.sale_id.payment_status
+#             if picking.sale_id.faktur_sementara or payment_status == 'paid':
+#                 is_locked = True
+#             else:
+#                 is_locked = False
+#             print ('===is_locked===',picking,is_locked,picking.sale_id.faktur_sementara)
+#             picking.update({
+#                 'payment_status': payment_status,
+#                 'is_locked': is_locked,
+#             })
+#              
+#     payment_status = fields.Selection([
+#         ('no', 'Nothing to be Paid'),
+#         ('partial_paid', 'Partially Paid'),
+#         ('paid', 'Fully Paid'),
+#         ('unpaid', 'Order Unpaid')
+#         ], string='Payment Status', compute='_get_payment_status', store=True, readonly=True)
 #     order_policy = fields.Selection([
 #             ('prepaid', 'Fully Payment Before Delivery'),
 #             ('manual', 'Shipping & Manual Invoice'),
