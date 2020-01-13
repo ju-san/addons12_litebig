@@ -41,7 +41,7 @@ class SaleOrder(models.Model):
     @api.one
     @api.depends('order_line', 'order_line.point_total')
     def _compute_point(self):
-        self.point_amount_total = sum([line.point_total for line in self.order_line])
+        self.point_amount_total = sum([line.point_total_bv for line in self.order_line])
     
 #     @api.depends('state', 'order_line.invoice_status', 'order_line.invoice_lines', 'invoice_ids.state')
 #     def _get_payment(self):
@@ -120,9 +120,21 @@ class SaleOrder(models.Model):
     
 class SaleOrderLine(models.Model): 
     _inherit = 'sale.order.line'
-
+    
+    @api.depends('product_uom_qty', 'point_total')
+    def _compute_amount_bv(self):
+        """
+        Compute the amounts of the SO line.
+        """
+        for line in self:
+            price_total_bv = line.point_total * line.product_uom_qty
+            line.update({
+                'point_total_bv': price_total_bv,
+            })
+            
     poin_ok = fields.Boolean('P/N', related='product_id.poin_ok')
     point_total = fields.Float('Total BV')
+    point_total_bv = fields.Monetary(compute='_compute_amount_bv', string='Total BV', readonly=True, store=True)
     
     
 #     @api.multi

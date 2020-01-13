@@ -26,7 +26,8 @@
 					<field name="poin_ok"/>
 				</xpath>
 				<xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='price_total']" position="after">
-					<field name="point_total"/>
+					<field name="point_total" invisible="1"/>
+					<field name="point_total_bv"/>
 				</xpath>
 				<!-- <xpath expr="//field[@name='comment']" position="before">
 					<div>

@@ -19,7 +19,7 @@ class AccountInvoice(models.Model):
     @api.one
     @api.depends('invoice_line_ids', 'invoice_line_ids.point_total')
     def _compute_point(self):
-        self.point_amount_total = sum([line.point_total for line in self.invoice_line_ids])
+        self.point_amount_total = sum([line.point_total_bv for line in self.invoice_line_ids])
     
     active = fields.Boolean(
         'Active', default=True,
@@ -44,7 +44,15 @@ class AccountInvoice(models.Model):
 class AccountInvoiceLine(models.Model): 
     _inherit = 'account.invoice.line'
     
+    @api.one
+    @api.depends('poin_ok', 'point_total', 'quantity', 'product_id',
+        'invoice_id.date_invoice', 'invoice_id.date')
+    def _compute_price_bv(self):
+        price_bv = self.point_total * self.quantity
+        self.point_total_bv = price_bv
+    
     poin_ok = fields.Boolean('P/N', related='product_id.poin_ok')
     point_total = fields.Float('Total BV')
-            
+    point_total_bv = fields.Monetary(string='Amount BV',
+        store=True, readonly=True, compute='_compute_price_bv', help="Total amount bisnis point")
             
