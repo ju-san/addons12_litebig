@@ -133,7 +133,7 @@ class SaleOrderLine(models.Model):
             })
             
     poin_ok = fields.Boolean('P/N', related='product_id.poin_ok')
-    point_total = fields.Float('Total BV')
+    point_total = fields.Float('Amount BV')
     point_total_bv = fields.Monetary(compute='_compute_amount_bv', string='Total BV', readonly=True, store=True)
     
     
